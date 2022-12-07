@@ -19,8 +19,8 @@ module.exports = {
         new HtmlWebpackPlugin({
             hash: true,
             title: 'Todo List',
-            //content: 'class="content"',
-            //template: './src/template_index.html',
+            container: 'class="projectContainer"',
+            template: './src/template_index.html',
             filename: './index.html'
         }),
         ],  
