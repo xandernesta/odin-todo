@@ -1,4 +1,4 @@
-import dom from './UI.js';
+import dom from './dom.js';
 import './style.css';
 
 document.addEventListener('DOMContentLoaded', dom);

@@ -33,6 +33,8 @@ body {
     background-size: cover; */
     margin:0;
     height: 100%;
+    font-family: 'Josefin Sans';
+    font-weight: 400;
 }
 
 button {
@@ -53,10 +55,20 @@ button {
 /* footer help from https://matthewjamestaylor.com/bottom-footer */
 .projectContainer {    
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100vh;
+    flex-wrap: wrap;
+    height: 85vh; /*the page went too far downa and created a scroll when I used 100vh like was originally recommended online*/
 }
+/*added to support flex of sidebar and main*/
+.projectContainer > * {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.projectContainer > *:nth-last-child(3),
+.projectContainer > *:nth-last-child(2) {
+  width: 50%;
+}
+
 
 /* Header */
 .header {
@@ -66,7 +78,7 @@ button {
   background: linear-gradient(90deg, var(--header-background-color) 0%, var(--aqua) 100%);
   border-color: 1px solid var(--border-color);
 }
-i, h1{
+i, h1 {
   display: inline-block;
   margin: 2px;
 }
@@ -83,6 +95,7 @@ h1 {
 }
 /* NAVIGATION BAR */
 #sidebar {
+  flex-direction: column;
   position:relative;
   overflow:auto;
   height: 100%;
@@ -95,16 +108,19 @@ h1 {
   display: inline-block;
   vertical-align: middle;
 }
+.task-links{
+  flex: 1;
+}
 .link,
 .project-link {
   display: flex;
   margin-bottom: 15px;
   padding: 12px 20px;
-  background-color: var(--white);
+  background-color: white;
   font-size: 17px;
   color: var(--dark-grey);
   text-decoration: none;
-  border: 1px solid var(--light-grey);
+  border: 1px solid lightgrey;
   border-radius: 5px;
   transition: .3s;
 }
@@ -114,7 +130,7 @@ h1 {
 }
 .selected-link {
   background-color: var(--aqua);
-  color: var(--white);
+  color: white;
 }
 .selected-link:hover {
   background-color: var(--dark-aqua);
@@ -125,14 +141,55 @@ h1 {
   transition: .3s;
 }
 
-
+/* PROJECTS */
+#nav-projects{
+  flex-grow:1;
+}
+.nav-projects-title {
+  display: flex;
+  justify-content: space-between;
+  margin: 80px 0 20px 0;
+  padding: 0 20px 10px 20px;
+  width: 260px;
+  font-size: 18px;
+  border-bottom: 1px solid darkgray;
+}
+.project-text,
+.task-text {
+  white-space: nowrap;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.project-link {
+  justify-content: space-between;
+}
+  /*Add Project Icon*/
+.fa-circle-plus{
+  color: var(--dark-font-color);
+}
 
 /* Main */
 main{
   /*for footer buffer*/
- padding-bottom: 30px;
+ padding-bottom: 40px;
+
 }
-#home {
+#main {
+  transition: background-color 250ms;
+}
+.main-title-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.main-title-icon {
+  font-size: 35px;
+}
+.main-title-text {
+  font-weight: 400;
+}
+/* #home {
     max-width: 75%;
     min-width: 708px;
     height: calc(10rem + 14vw);
@@ -143,177 +200,42 @@ main{
     display: flex;
     flex-direction: column;
     flex-grow:0;
-}
-
-
-
-/*Menu*/
-
-/* #menu {
-  width: 46%;
-  background: rgb(14, 100, 100, .5);
-  padding: calc(2rem + 2vw);
-  border-radius: 1.2rem;
-  margin: 4rem auto;
-  display: grid;
-  grid-template-columns: repeat(2, 4fr);
-  grid-gap: 4rem;
-  
-  
-}
-.menu{
-  width: 36vw;
-  margin-bottom: 26px;
-}
-#menu h3{
-  font-size: calc(2rem + 1vw);
-  font-family: 'Josefin Sans';
-  text-align: center;
-  margin-bottom: 1rem;
-}
-#menu h4{
-  font-family: 'Permanent Marker';
-  font-size: calc(2rem + 0.5vw);
-  margin-left: 0;
-}
-.menu-item {
-  flex-basis: 20rem;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-.menu-item span{
-  justify-self: end;
-}
-
-.item-content {
-  /* padding: 0 1rem; *//*
-  font-family: 'Inter';
-  font-size: calc(1rem + .5vw);
-  color: var(--dark-font-color);
-  flex-grow: 2;
-}
-
-#menu .item-content span {
-  font-size: calc(1rem + 1vw);
-  
-}
-
-#menu h4{
-  color:var(--menu-h4-color);
-}
-#menu span{
-  color: var(--price-font-color);
-  margin-left: 4rem;
-  
 } */
-/*Contact*/
-/* 
-#contact h1{
-  color: var(--home-h2-font-color);
-  text-align: center;
-  font-family: 'Poppins';
-  font-size: 3rem;
-}
-#contact h3{
-  font-size: calc(2rem + 1vw);
-  font-family: 'Josefin Sans';
-  color: var(--home-h2-font-color);
-  text-align: center;
-  margin-bottom: 1rem;
-}
-#contact .contact-container {
-  margin-top: 0rem;
-  background: var(--background-dark);
-  width: 100%;
-  border-radius: 1.2rem;
-  padding: 2rem calc(3rem + 2vw) ;
-  margin: 2rem auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-#contact .info p {
-  font-family: 'Poppins';
-  text-align: justify;
-  font-size: 1.5rem;
-  margin: 1.5rem 0;
-  color: var(--light-font-color);
-}
 
-#contact .info i {
-  font-size: 1.5rem;
-  padding-right: 1rem;
-  color: var(--price-font-color);
-}
-/*imported */ /*
-
-#contact .contact-container .input-box {
+/* TOOLTIP */
+.tooltip-icon {
   position: relative;
-  margin-top: 1rem;
 }
-
-#contact .contact-container .input-box input,
-#contact .contact-container .input-box textarea {
-  width: 98%;
-  padding: 0.5rem 0;
-  margin: 1rem 0;
-  font-size: 1.6rem;
-  border: none;
-  outline: none;
-  border-bottom: 2px solid var(--border-color);
-  resize: none;
-  background: rgba(243, 55, 55, 0);
-}
-
-#contact .contact-container .input-box span {
+.tooltip-icon .tooltip-text {
+  visibility: hidden;
   position: absolute;
-  left: 0;
-  padding: 0.5rem 0;
-  margin: 1rem 0;
-  font-size: 1.6rem;
-  pointer-events: none;
-  transition: 0.3s;
-  color: var(--home-h2-font-color);
-  font-family: 'Poppins';
-}
-
-#contact .contact-container .input-box input:focus ~ span,
-#contact .contact-container .input-box input:valid ~ span,
-#contact .contact-container .input-box textarea:focus ~ span,
-#contact .contact-container .input-box textarea:valid ~ span {
-  color: var(--home-h2-font-color);
-  font-size: 1.2rem;
-  transform: translateY(-2rem);
-}
-
-#contact .contact-container textarea,
-#contact .contact-container input[type="text"] {
-  font-family: 'Poppins';
-  color: var(--light-font-color);
-}
-
-#contact .contact-container input[type="submit"] {
-  width: 10rem;
-  font-size: 1.6rem;
-  background: var(--home-h2-font-color);
-  padding: 8px 22px;
+  bottom: 130%;
+  width: 135px;
+  margin-left: -125px;
+  padding: 10px;
+  background-color: var(--background-dark);
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 15px;
   color: var(--background-light);
-  border: none;
-  outline: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: 0.5s;
+  text-align: center;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity .3s;
 }
-
-#contact .contact-container input[type="submit"]:hover {
-  background: var(--home-p-background);
-} */
+.tooltip-icon .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 85%;
+  margin-left: -4px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--background-dark) transparent transparent transparent;
+}
+.tooltip-icon:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
 
 
 /*Footer*/
