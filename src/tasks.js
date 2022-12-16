@@ -1,9 +1,8 @@
 import localStorage from './localstorage.js'
 import projects from './projects.js'
-import {format, compareAsc, differenceInDays} from 'date-fns';
-
+import {format, compareAsc, differenceInDays, endOfDay} from 'date-fns';
 const tasks = (() => {
-    format(new Date(1900, 1, 11), 'MM/dd/yyyy') // +> '01/11/1900'
+    
 
     class Task {
         constructor(title, details, dueDate, priority, projectIndex, taskIndex) {
@@ -42,15 +41,20 @@ const tasks = (() => {
         return tasksList;
     }
     //Testing Area
+    const {format} = require('date-fns');
+    format(new Date(1900, 1, 11), 'MM/dd/yyyy') // +> '01/11/1900'
     projects.addProject('Project1', 0);
-    addTask('first Task', 'this is my first todo', new Date(12/14/2022), 'low',0,0);
-    addTask('second Task', 'this is my second todo', new Date(12/15/2022), 'low',0,1);
+    addTask('first Task', 'this is my first todo', new Date('12/28/2022'), 'low',0,0);
+    addTask('second Task', 'this is my second todo', new Date('12/16/2022'), 'low',0,1);
     projects.addProject('2ndProject', 1);
-    editTask('still first task', 'this is my first todo',new Date(12/14/2022), 'medium',0,0);
-    addTask('third Task', 'this is my 3rd todo', new Date(12/15/2022), 'high',1,1);
+    editTask('still first task', 'this is my first todo',new Date('12/28/2022'), 'medium',0,0);
+    addTask('third Task', 'this is my 3rd todo', new Date('12/17/2022'), 'high',1,1);
+    addTask('Fourth Task', 'this is my 4th todo', new Date('12/18/2022'), 'high',0,2);
     console.log("printing list of all tasks")
     console.table(getAllTasks());
-
+    let today = new Date();
+    console.log(today);
+    console.log(endOfDay(today));
     return {
         addTask,
         editTask,

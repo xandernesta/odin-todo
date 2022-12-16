@@ -15,9 +15,21 @@ const handlers = (() => {
 
             //Adds selected class for styling and changing page Title
             if (target.classList.contains('select')){
-                dom.selectLink(target, linkIndex);
-                dom.changeMainTitle(target, linkIndex)
-                
+/*                 if(linkIndex === 0){
+                    if (target.classList.contains('selected-link')){
+                        return
+                    }
+                    else{
+                        dom.selectLink(target, linkIndex);
+                        dom.changeTasksList(linkIndex);
+                        
+                    }
+                }
+                else{ */
+                    dom.selectLink(target, linkIndex);
+                    dom.changeMainTitle(target, linkIndex)
+                    dom.changeTasksList(linkIndex)
+                //}
             }
         })
     }

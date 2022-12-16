@@ -1,6 +1,6 @@
 import projects from './projects.js'
 import tasks from './tasks.js'
-//import format from date-fns
+import {format, endOfDay, endOfWeek} from 'date-fns'
 import localStorage from './localstorage.js'
 
 //DOM elements
@@ -12,6 +12,7 @@ const dom = (() => {
     const taskLinksDiv = document.querySelector('.task-links');
     let mainContainer = document.getElementById('main');
     let tasksListDiv = document.querySelector('.tasks-list');
+    format(new Date(1900, 1, 11), 'MM/dd/yyyy') // +> '01/11/1900'
 
     //creates header
     const header = (() => {
@@ -142,6 +143,14 @@ const dom = (() => {
         tasksTitle.appendChild(tasksTitleP);
         tasksTitleDiv.appendChild(tasksTitle);
         mainTasksDiv.appendChild(tasksTitleDiv);
+        //circle plus sign icon
+        const taskAddIcon = document.createElement('i');
+        taskAddIcon.classList.add('fa-solid','fa-circle-plus','add-task','hover-element','tooltip-icon');
+            const addTaskTooltip = document.createElement('span');
+            addTaskTooltip.classList.add('add-task', 'tooltip-text');
+            addTaskTooltip.textContent = 'Add a New Task';
+            taskAddIcon.appendChild(addTaskTooltip);
+            tasksTitleDiv.appendChild(taskAddIcon); //Add taskAddIcon to main-title-div
         //creating the actual task list below the tasksTitleDiv
         let tasksListDiv = document.createElement('div');
         tasksListDiv.classList.add('tasks-list');
@@ -217,18 +226,76 @@ const dom = (() => {
           showMainTitle(index);
         }
     }
-    function showAllTasks(linkTitle){
-        let tasksNumber = 0;
-        const tasksList = tasks.getAllTasks()
+    function showAllTasks(index){
+        const allTasksList = tasks.getAllTasks()
+        changeTasksList(index);
+        
+        
+       // mainTasksDiv.appendChild(tasksListDiv);
+    }
+
+    function changeTasksList(index){
+        const tasksList = tasks.getAllTasks();
         const projectsList = projects.getAllProjects();
+        let currentTasksList = [];
+        const today = new Date();
+        let tasksListDiv = document.querySelector('.tasks-list');
+
+        //filter all tasks down according to the link selected
+        switch (index) {
+            case 0:
+                currentTasksList = tasksList;
+                generateTasksDom(currentTasksList);
+                break;
+            case 1:
+                currentTasksList = tasksList.filter(task => {
+                const dateDue = new Date(task.dueDate);
+                return dateDue <= endOfDay(today)
+                    //return format(task.dueDate, 'MM/dd/yyyy') <= today;
+                });
+                console.log(`${endOfDay(today)}`);
+                console.log('Today tasklist: ');
+                console.log(tasksList);
+                console.log('Today CurrentTaskslist: ');
+                console.table(currentTasksList);
+                //console.log(`task.dueDate: ${task.dueDate}`);
+                generateTasksDom(currentTasksList);
+                break;
+            case 2:
+                currentTasksList = tasksList.filter(task =>  {               
+                const dateDue = new Date(task.dueDate);
+                return dateDue <= endOfWeek(today)
+                    
+                });
+                console.log('tasklist: ');
+                console.table(tasksList);
+                console.log('currentTasksList: ');
+                console.table(currentTasksList);
+                generateTasksDom(currentTasksList);
+                break;
+            case 3:
+                currentTasksList = tasksList
+                console.log('tasklist: ');
+                console.table(tasksList);
+                console.log('CurrentTaskslist: ');
+                console.table(currentTasksList);
+                generateTasksDom(currentTasksList);
+                break;
+
+            default:
+                return currentTasksList;
+                
+            
+        }
+    }
+    function generateTasksDom(array){
+        let currentTasksList = array;
         let tasksListDiv = document.querySelector('.tasks-list');
         let tasksCount = document.querySelector('.tasks-count');
-/*         let mainTasksDiv = document.querySelector('.tasks-div')
-        mainTasksDiv.removeChild(tasksListDiv); 
-        tasksListDiv.innerHtml = ''; */
-        tasksList.textContent = ''; 
-
-        for(let i =0; i < tasksList.length; i++){
+        let tasksNumber = 0;
+        tasksListDiv.innerHTML = '';
+        //Loops through array to generate new tasks list
+        for(let i = 0; i < currentTasksList.length; i++){
             const taskDiv = document.createElement('div');
             const taskIconAndTextDiv = document.createElement('div');
             const taskIcon = document.createElement('i');
@@ -238,39 +305,37 @@ const dom = (() => {
             const taskEditIcon = document.createElement('i');
             const taskTrashIcon = document.createElement('i');
             const taskInfoIcon = document.createElement('i');
-            /* if(linkTitle === 'all'){
-                
-            } */
+         
             tasksNumber = i+1;
             tasksCount.textContent = `(${tasksNumber})`;
             taskDiv.classList.add('task-div', 'hover-element');
             taskIconAndTextDiv.classList.add('flex');
-            taskDiv.setAttribute('data-project-index', tasksList[i].projectIndex);
-            taskDiv.setAttribute('data-task-index', tasksList[i].taskIndex);
+            taskDiv.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskDiv.setAttribute('data-task-index', currentTasksList[i].taskIndex);
 
-            /* if (tasksList[i].priority === 'low') {
+            if (currentTasksList[i].priority === 'low') {
             taskIcon.classList.add('low-priority');
-            } else if (tasksList[i].priority === 'medium') {
+            } else if (currentTasksList[i].priority === 'medium') {
             taskIcon.classList.add('mid-priority');
-            } else if (tasksList[i].priority === 'high') {
+            } else if (currentTasksList[i].priority === 'high') {
             taskIcon.classList.add('high-priority');
             } else {
             taskIcon.classList.add('fal', 'padding-right');
-            } */
-            /* taskIcon.setAttribute('data-project-index', tasksList[i].projectIndex);
-            taskIcon.setAttribute('data-task-index', tasksList[i].taskIndex); */
+            } 
+            taskIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
             taskText.classList.add('task-text');
-            taskText.textContent = tasksList[i].title;
-            taskText.setAttribute('data-project-index', tasksList[i].projectIndex);
-            taskText.setAttribute('data-task-index', tasksList[i].taskIndex);
+            taskText.textContent = currentTasksList[i].title;
+            taskText.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskText.setAttribute('data-task-index', currentTasksList[i].taskIndex);
 
             // TASK INFO DIV
             taskInfo.classList.add('flex');
 
             // TASKS DUE DATE
             taskDate.classList.add('due-date', 'padding-right');
-            if (tasksList[i].date !== undefined) {
-            taskDate.textContent = tasksList[i].date;
+            if (currentTasksList[i].dueDate !== undefined) {
+            taskDate.textContent = format(new Date(currentTasksList[i].dueDate), 'MM/dd/yyyy');
             } else {
             taskDate.textContent = '';
             }
@@ -284,8 +349,8 @@ const dom = (() => {
             'scale-element',
             'padding-right'
             );
-            taskEditIcon.setAttribute('data-project-index', tasksList[i].projectIndex);
-            taskEditIcon.setAttribute('data-task-index', tasksList[i].taskIndex);
+            taskEditIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskEditIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
 
             // TASK DELETE ICON
             taskTrashIcon.classList.add(
@@ -296,8 +361,8 @@ const dom = (() => {
             'scale-element',
             'padding-right'
             );
-            taskTrashIcon.setAttribute('data-project-index', tasksList[i].projectIndex);
-            taskTrashIcon.setAttribute('data-task-index', tasksList[i].taskIndex);
+            taskTrashIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskTrashIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
 
             // TASK INFO ICON
             taskInfoIcon.classList.add(
@@ -306,8 +371,8 @@ const dom = (() => {
                 'scale-element',
                 'fa-circle-info'
             );
-            taskInfoIcon.setAttribute('data-project-index', tasksList[i].projectIndex);
-            taskInfoIcon.setAttribute('data-task-index', tasksList[i].taskIndex);
+            taskInfoIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskInfoIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
 
                 // APPENDS
             taskIconAndTextDiv.appendChild(taskIcon);
@@ -320,17 +385,14 @@ const dom = (() => {
             taskDiv.appendChild(taskInfo);
             tasksListDiv.appendChild(taskDiv);
 
-        } 
-        
-       // mainTasksDiv.appendChild(tasksListDiv);
+        }
     }
-
- 
     return {
         selectLink,
         showMainTitle,
         changeMainTitle,
-        showAllTasks
+        showAllTasks,
+        changeTasksList
     }
 })();
 
