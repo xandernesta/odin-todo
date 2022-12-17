@@ -158,12 +158,6 @@ const dom = (() => {
 
         main.appendChild(mainTasksDiv);
 
-
-
-        //mainTitleDiv.appendChild(mainTitleText); //Add h1 to main-title-div
-        //main.appendChild(mainTitleDiv); //Add main-title elements to main container
-
-        
         return main;
     })();
     //footer
@@ -234,7 +228,7 @@ const dom = (() => {
        // mainTasksDiv.appendChild(tasksListDiv);
     }
 
-    function changeTasksList(index){
+    function changeTasksList(linkIndex){
         const tasksList = tasks.getAllTasks();
         const projectsList = projects.getAllProjects();
         let currentTasksList = [];
@@ -242,7 +236,7 @@ const dom = (() => {
         let tasksListDiv = document.querySelector('.tasks-list');
 
         //filter all tasks down according to the link selected
-        switch (index) {
+        switch (linkIndex) {
             case 0:
                 currentTasksList = tasksList;
                 generateTasksDom(currentTasksList);
@@ -283,9 +277,7 @@ const dom = (() => {
                 break;
 
             default:
-                return currentTasksList;
-                
-            
+                return currentTasksList; 
         }
     }
     function generateTasksDom(array){
