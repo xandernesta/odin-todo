@@ -334,24 +334,24 @@ const dom = (() => {
 
             // TASK EDIT ICON
             taskEditIcon.classList.add(
-            'fa-regular',
-            'fa-pen-to-square',
-            'edit-task',
-            'task-icon',
-            'scale-element',
-            'padding-right'
+                'fa-regular',
+                'fa-pen-to-square',
+                'edit-task',
+                'task-icon',
+                'scale-element',
+                'padding-right'
             );
             taskEditIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
             taskEditIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
 
             // TASK DELETE ICON
             taskTrashIcon.classList.add(
-            'fa-solid',
-            'fa-trash-can',
-            'delete-task',
-            'task-icon',
-            'scale-element',
-            'padding-right'
+                'fa-solid',
+                'fa-trash-can',
+                'delete-task',
+                'task-icon',
+                'scale-element',
+                'padding-right'
             );
             taskTrashIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
             taskTrashIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);

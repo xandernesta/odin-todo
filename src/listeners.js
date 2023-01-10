@@ -22,7 +22,6 @@ const handlers = (() => {
                     else{
                         dom.selectLink(target, linkIndex);
                         dom.changeTasksList(linkIndex);
-                        
                     }
                 }
                 else{ */
@@ -32,6 +31,7 @@ const handlers = (() => {
                 //}
             }
         })
+
     }
 
     return {
