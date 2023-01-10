@@ -197,8 +197,8 @@ main{
 /* TASKS Title*/
 .tasks-div {
   max-width: 1000px;
-  margin: 0 ;
-  padding: 40px;
+  width: 75%;
+  margin-left: 15%;
 }
 .tasks-title-div {
   display: flex;
