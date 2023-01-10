@@ -113,7 +113,7 @@ h1 {
 .link,
 .project-link {
   display: flex;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   padding: 12px 20px;
   background-color: white;
   font-size: 17px;
@@ -126,6 +126,7 @@ h1 {
 .link p,
 .project-link p {
   padding-left: 3px;
+  margin-bottom: 0px;
 }
 .selected-link {
   background-color: var(--aqua);
@@ -196,7 +197,7 @@ main{
 /* TASKS Title*/
 .tasks-div {
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 0 ;
   padding: 40px;
 }
 .tasks-title-div {
@@ -359,12 +360,12 @@ main{
     align-items: center;
     justify-content: center;
     padding: .5rem 0;
-    
     background: linear-gradient(90deg, var(--aqua) 0%, var(--header-background-color) 100%);
-
-
   }
-a {
+.footer p{
+  margin-bottom: 0;
+}
+.footer a {
   display: inline-block;
   text-decoration:none;
   color: inherit
