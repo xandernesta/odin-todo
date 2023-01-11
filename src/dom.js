@@ -143,14 +143,144 @@ const dom = (() => {
         tasksTitle.appendChild(tasksTitleP);
         tasksTitleDiv.appendChild(tasksTitle);
         mainTasksDiv.appendChild(tasksTitleDiv);
-        //circle plus sign icon
+        //circle plus sign icon- Add task button
         const taskAddIcon = document.createElement('i');
         taskAddIcon.classList.add('fa-solid','fa-circle-plus','add-task','hover-element','tooltip-icon');
+        taskAddIcon.setAttribute('data-bs-toggle','modal');
+        taskAddIcon.setAttribute('data-bs-target','#task-modal');
             const addTaskTooltip = document.createElement('span');
             addTaskTooltip.classList.add('add-task', 'tooltip-text');
             addTaskTooltip.textContent = 'Add a New Task';
             taskAddIcon.appendChild(addTaskTooltip);
             tasksTitleDiv.appendChild(taskAddIcon); //Add taskAddIcon to main-title-div
+        //create AddTask modal
+        const taskAddModal = document.createElement('div');
+        taskAddModal.classList.add('modal','modal-card','fade');
+        taskAddModal.setAttribute('id','task-modal');
+            // create modal dialog nested under taskAddModal - for bootstrap
+            const taskModalDialog = document.createElement('div');
+            taskModalDialog.classList.add('modal-dialog', 'modal-dialog-centered');
+            //create modal content nested under taskModalDialog - for boostrap
+                const taskModalContent = document.createElement('div');
+                taskModalContent.classList.add('modal-content');
+                    const taskModalHeader = document.createElement('div');
+                    taskModalHeader.classList.add('modal-header');
+                        const taskModalH1 = document.createElement('h2');
+                        taskModalH1.textContent = 'Add Task';
+                        const taskModalH1CloseBtn = document.createElement('button');
+                        taskModalH1CloseBtn.classList.add('btn-close');
+                        taskModalH1CloseBtn.setAttribute('data-bs-dismiss','modal');
+                        taskModalH1CloseBtn.setAttribute('data-bs-target','#task-modal');
+                        taskModalHeader.appendChild(taskModalH1);
+                        taskModalHeader.appendChild(taskModalH1CloseBtn);
+                        taskModalContent.appendChild(taskModalHeader);
+                    const taskModalBody = document.createElement('div');
+                    taskModalBody.classList.add('modal-body');
+                    taskModalBody.innerHTML = `
+
+                    <!-- MODAL TITLE INPUT -->
+                    <form>
+                      <label id="modal-title-label" for="modal-title">Title<span class="title-star">*</span></label>
+                      <input type="text" class="form-control"id="modal-title" name="modal-title" autocomplete="off">
+                      <p class="modal-title-error hide">Please fill out this field.</p>
+                    </form>
+          
+                    <!-- RADIO BUTTONS -->
+                    <div class="radio-form hide">
+                      <p>Icon</p>
+                      <div class="project-icons">
+                        <label class="radio-before">
+                          <span class="radio-input">
+                            <input type="radio" id="flower-daffodil" class="icon" name="projectFormIcon" value="fa-flower-daffodil" checked="">
+                            <span class="radio-control"><i class="fal fa-flower-daffodil fa-fw"></i></span>
+                          </span>
+                        </label>
+                        <label class="radio-before">
+                          <span class="radio-input">
+                            <input type="radio" id="book" class="icon" name="projectFormIcon" value="fa-book">
+                            <span class="radio-control"><i class="fal fa-book fa-fw"></i></span>
+                          </span>
+                        </label>
+                        <label class="radio-before">
+                          <span class="radio-input">
+                            <input type="radio" id="tools" class="icon" name="projectFormIcon" value="fa-tools">
+                            <span class="radio-control"><i class="fal fa-tools fa-fw"></i></span>
+                          </span>
+                        </label>
+                        <label class="radio-before">
+                          <span class="radio-input">
+                            <input type="radio" id="volleyball-ball" class="icon" name="projectFormIcon" value="fa-volleyball-ball">
+                            <span class="radio-control"><i class="fal fa-volleyball-ball fa-fw"></i></span>
+                          </span>
+                        </label>
+                        <label class=" radio radio-before">
+                          <span class="radio-input">
+                            <input type="radio" id="sack-dollar" class="icon" name="projectFormIcon" value="fa-sack-dollar">
+                            <span class="radio-control"><i class="fal fa-sack-dollar fa-fw"></i></span>
+                          </span>
+                        </label>
+                        <label class="radio radio-before">
+                          <span class="radio-input">
+                            <input type="radio" id="pizza-slice" class="icon" name="projectFormIcon" value="fa-pizza-slice">
+                            <span class="radio-control"><i class="fal fa-pizza-slice fa-fw"></i></span>
+                          </span>
+                        </label>
+                        <label class="radio-before">
+                          <span class="radio-input">
+                            <input type="radio" id="backpack" class="icon" name="projectFormIcon" value="fa-backpack">
+                            <span class="radio-control"><i class="fal fa-backpack fa-fw"></i></span>
+                          </span>
+                        </label>
+                        <label class="radio-before">
+                          <span class="radio-input">
+                            <input type="radio" id="gift" class="icon" name="projectFormIcon" value="fa-gift">
+                            <span class="radio-control"><i class="fal fa-gift fa-fw"></i></span>
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+          
+                    <!-- MODAL CONTENT FOR A TASK -->
+                    
+          
+                      <!-- TASK DESCRIPTION -->
+                      <form class="task-details-area">
+                        <label for="task-details">Details</label>
+                        <textarea class="task-details form-control" rows="3" cols="36"></textarea>
+                      </form>
+          
+                      <!-- TASK DUE DATE -->
+                      <form class="task-due-date">
+                        <label for="dueDate">Due Date</label>
+                        <input type="date" class="form-control" id="due-date" name="dueDate">
+                      </form>
+          
+                      <!-- TASK PRIORITY -->
+                      <form>
+                        <label for="priority">Priority</label>
+                        <select class="task-priority form-select" name="priority">
+                          <option value="" disabled="" selected="">Task's priority?</option>
+                          <option value="low">😴 Low</option>
+                          <option value="medium">😅 Medium</option>
+                          <option value="high">😲 High</option>
+                        </select>
+                      </form>
+
+
+                  `
+                    taskModalContent.appendChild(taskModalBody);
+                    const taskModalFooter = document.createElement('div');
+                    taskModalFooter.classList.add('modal-footer','modal-buttons');
+                    taskModalFooter.innerHTML = `
+                            <button type="button" class="btn btn-light cancel-modal" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary modal-task-button">Add</button> `
+                    taskModalContent.appendChild(taskModalFooter);
+
+                //append content to dialog and dialog to taskModal
+                taskModalDialog.appendChild(taskModalContent);
+                taskAddModal.appendChild(taskModalDialog);
+        tasksTitleDiv.appendChild(taskAddModal); //Add taskAddModal to main-title-div
+
         //creating the actual task list below the tasksTitleDiv
         let tasksListDiv = document.createElement('div');
         tasksListDiv.classList.add('tasks-list');

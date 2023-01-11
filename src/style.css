@@ -149,10 +149,13 @@ h1 {
   display: flex;
   justify-content: space-between;
   margin: 80px 0 20px 0;
-  padding: 0 20px 10px 20px;
+  padding: 0 20px 0 20px;
   width: 260px;
   font-size: 18px;
   border-bottom: 1px solid darkgray;
+}
+.nav-projects-title p{
+  margin-bottom: 8px;
 }
 .project-text,
 .task-text {
@@ -192,6 +195,7 @@ main{
 .main-title-text {
   font-weight: 400;
   color: var(--dark-grey);
+  padding-top: 8px;
 }
 
 /* TASKS Title*/
@@ -211,10 +215,15 @@ main{
 .tasks-title {
   display: flex;
 }
+.tasks-title p{
+  margin-bottom: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
 .task-div {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
+  padding: .75rem;
   border-bottom: 1px solid var(--light-grey);
   transition: .3s;
 }
@@ -345,23 +354,74 @@ main{
   opacity: 1;
 }
 
+/*Modal Style*/
+.modal-card {
+  /* position: relative; */
+  /* margin: 15% auto; */
+ /*  max-width: 400px; */
+  border-radius: 5px;
+  font-family: 'Inter';
+  box-shadow: rgba(46, 46, 46, 0.2) 0px 2px 8px 0px;
+  animation: fadeIn .2s;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(90deg, var(--header-background-color) 0%, var(--aqua) 100%);
+  color: var(--light-font-color);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Josefin Sans';
+  background-color: white;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.modal-body form{
+  margin-bottom: .5rem;
+  
+}
+.modal-content .btn{
+  font-family: 'Josefin Sans';
 
+}
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 20px 16px 20px 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--grey);
+}
+.cancel-modal{
+  border-color: #ced4da !important;
+}
+.modal-task-button{
+  background-color: var(--aqua) !important;
+  border-color: var(--dark-aqua) !important;
+}
+.modal-task-button:hover{
+  background-color: var(--header-background-color) !important;
+  border-color: var(--header-background-color) !important;
+}
 /*Footer*/
-#footer{
+.footer {
   width: 100%;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
+  font-family: 'Mochiy Pop One';
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  padding: .75rem 0;
+  background: linear-gradient(90deg, var(--aqua) 0%, var(--header-background-color) 100%);
 }
-.footer {
-    font-family: 'Mochiy Pop One';
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: .5rem 0;
-    background: linear-gradient(90deg, var(--aqua) 0%, var(--header-background-color) 100%);
-  }
 .footer p{
   margin-bottom: 0;
 }
@@ -381,3 +441,45 @@ main{
   transform: rotate(360deg)  scale(1.1); /* Don't want it to rotate on this page */
   color: var(--aqua);
 }
+
+
+/*added from https://gist.github.com/WebDevSimplified/d7deffbd6631834003ad07ca60aaf906 for different screen sizes*/
+/* remove before completion */
+/* body::before {
+  content: "XS";
+  color: red;
+  font-size: 2rem;
+  font-weight: bold;
+  top: 0;
+  left: 0;
+}
+
+@media (min-width: 576px) {
+  body::before {
+    content: "SM";
+  }
+}
+
+@media (min-width: 768px) {
+  body::before {
+    content: "MD";
+  }
+}
+
+@media (min-width: 992px) {
+  body::before {
+    content: "LG";
+  }
+}
+
+@media (min-width: 1200px) {
+  body::before {
+    content: "XL";
+  }
+}
+
+@media (min-width: 1400px) {
+  body::before {
+    content: "XXL";
+  }
+} */
