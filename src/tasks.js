@@ -3,7 +3,6 @@ import projects from './projects.js'
 import {format, compareAsc, differenceInDays, endOfDay} from 'date-fns';
 const tasks = (() => {
     
-
     class Task {
         constructor(title, details, dueDate, priority, projectIndex, taskIndex) {
             this.title = title;
@@ -40,6 +39,13 @@ const tasks = (() => {
         }
         return tasksList;
     }
+    function retrieveTask(dataProjectIndex, dataTaskIndex){
+        let taskArr = getAllTasks();
+        let foundTask = taskArr.filter(function(task){
+            return parseInt(task.projectIndex,10) === dataProjectIndex && parseInt(task.taskIndex,10) === dataTaskIndex;
+        })
+        return foundTask;
+    }
     //Testing Area
     const {format} = require('date-fns');
     format(new Date(1900, 1, 11), 'MM/dd/yyyy') // +> '01/11/1900'
@@ -55,10 +61,12 @@ const tasks = (() => {
     let today = new Date();
     console.log(today);
     console.log(endOfDay(today));
+    console.table(`retrieving Task 0,1: ${JSON.stringify(retrieveTask(0,1))}`);
     return {
         addTask,
         editTask,
-        getAllTasks
+        getAllTasks,
+        retrieveTask
     }
 })();
 

@@ -8,7 +8,7 @@ import localStorage from './localstorage.js'
 
 const dom = (() => {
     //Dom Selectors
-    const container = document.getElementById("projectContainer");
+    const container = document.getElementById('projectContainer');
     const taskLinksDiv = document.querySelector('.task-links');
     let mainContainer = document.getElementById('main');
     let tasksListDiv = document.querySelector('.tasks-list');
@@ -163,6 +163,10 @@ const dom = (() => {
             //create modal content nested under taskModalDialog - for boostrap
                 const taskModalContent = document.createElement('div');
                 taskModalContent.classList.add('modal-content');
+                const taskModalContentForm = document.createElement('form');
+                taskModalContentForm.setAttribute('id','form');
+                // taskModalContentForm.setAttribute('novalidate','');
+                taskModalContent.appendChild(taskModalContentForm);
                     const taskModalHeader = document.createElement('div');
                     taskModalHeader.classList.add('modal-header');
                         const taskModalH1 = document.createElement('h2');
@@ -173,17 +177,17 @@ const dom = (() => {
                         taskModalH1CloseBtn.setAttribute('data-bs-target','#task-modal');
                         taskModalHeader.appendChild(taskModalH1);
                         taskModalHeader.appendChild(taskModalH1CloseBtn);
-                        taskModalContent.appendChild(taskModalHeader);
+                        taskModalContentForm.appendChild(taskModalHeader);
                     const taskModalBody = document.createElement('div');
                     taskModalBody.classList.add('modal-body');
                     taskModalBody.innerHTML = `
 
                     <!-- MODAL TITLE INPUT -->
-                    <form>
+                    <div class="form-group">
                       <label id="modal-title-label" for="modal-title">Title<span class="title-star">*</span></label>
-                      <input type="text" class="form-control"id="modal-title" name="modal-title" autocomplete="off">
-                      <p class="modal-title-error hide">Please fill out this field.</p>
-                    </form>
+                      <input type="text" class="form-control" id="modal-title" name="modal-title" required>
+                      <!--<p class="modal-title-error hide">Please fill out this field.</p> -->
+                    </div>
           
                     <!-- RADIO BUTTONS -->
                     <div class="radio-form hide">
@@ -244,37 +248,36 @@ const dom = (() => {
                     
           
                       <!-- TASK DESCRIPTION -->
-                      <form class="task-details-area">
+                      <div class="form-group">
                         <label for="task-details">Details</label>
                         <textarea class="task-details form-control" rows="3" cols="36"></textarea>
-                      </form>
+                      </div>
           
                       <!-- TASK DUE DATE -->
-                      <form class="task-due-date">
+                      <div class="form-group">
                         <label for="dueDate">Due Date</label>
-                        <input type="date" class="form-control" id="due-date" name="dueDate">
-                      </form>
+                        <input type="date" class="form-control" id="due-date" name="dueDate" required>
+                      </div>
           
                       <!-- TASK PRIORITY -->
-                      <form>
+                      <div class="form-group">
                         <label for="priority">Priority</label>
-                        <select class="task-priority form-select" name="priority">
+                        <select class="task-priority form-select" name="priority" required>
                           <option value="" disabled="" selected="">Task's priority?</option>
                           <option value="low">😴 Low</option>
                           <option value="medium">😅 Medium</option>
                           <option value="high">😲 High</option>
                         </select>
-                      </form>
-
-
-                  `
-                    taskModalContent.appendChild(taskModalBody);
+                      </div>
+                  `//NEED TO MAKE A NEW FORM FIELD FOR TASKS PROJECT
+                    taskModalContentForm.appendChild(taskModalBody);
                     const taskModalFooter = document.createElement('div');
                     taskModalFooter.classList.add('modal-footer','modal-buttons');
                     taskModalFooter.innerHTML = `
-                            <button type="button" class="btn btn-light cancel-modal" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary modal-task-button">Add</button> `
-                    taskModalContent.appendChild(taskModalFooter);
+                            <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary modal-task-button">Add</button> 
+                            `
+                    taskModalContentForm.appendChild(taskModalFooter);
 
                 //append content to dialog and dialog to taskModal
                 taskModalDialog.appendChild(taskModalContent);
@@ -353,9 +356,6 @@ const dom = (() => {
     function showAllTasks(index){
         const allTasksList = tasks.getAllTasks()
         changeTasksList(index);
-        
-        
-       // mainTasksDiv.appendChild(tasksListDiv);
     }
 
     function changeTasksList(linkIndex){
@@ -473,6 +473,8 @@ const dom = (() => {
             );
             taskEditIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
             taskEditIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
+            taskEditIcon.setAttribute('data-bs-toggle','modal');
+            taskEditIcon.setAttribute('data-bs-target','#task-modal');
 
             // TASK DELETE ICON
             taskTrashIcon.classList.add(

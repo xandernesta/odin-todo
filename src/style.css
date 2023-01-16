@@ -4,6 +4,8 @@
 :root {
     --dark-font-color: black;
     --dark-gray:rgb(94, 94, 94);
+    --light-gray: #e5e5e5;
+    --grey: #E6E6E6;
     --header-background-color:rgb(9, 61, 107);
     --light-font-color: rgb(238, 238, 238);
     --sidebar-background-color:rgb(14, 100, 100, .8);
@@ -139,6 +141,7 @@ h1 {
 .project-link:not(.selected-link):hover {
   border: 1px solid var(--aqua);
   transition: .3s;
+  
 }
 
 /* PROJECTS */
@@ -194,7 +197,7 @@ main{
 }
 .main-title-text {
   font-weight: 400;
-  color: var(--dark-grey);
+  color: var(--dark-font-color);
   padding-top: 8px;
 }
 
@@ -224,11 +227,11 @@ main{
   display: flex;
   justify-content: space-between;
   padding: .75rem;
-  border-bottom: 1px solid var(--light-grey);
+  border-bottom: 1px solid var(--light-gray);
   transition: .3s;
 }
 .task-div:hover {
-  box-shadow: inset 0 -60px 0 0 var(--light-grey);
+  box-shadow: inset 0 -4rem 0 0 var(--light-gray);
   transition: .3s;
 }
 /*Task Info Icon */
@@ -359,9 +362,8 @@ main{
   /* position: relative; */
   /* margin: 15% auto; */
  /*  max-width: 400px; */
-  border-radius: 5px;
   font-family: 'Inter';
-  box-shadow: rgba(46, 46, 46, 0.2) 0px 2px 8px 0px;
+  box-shadow: rgba(46, 46, 46, 0.2) 4px 4px 4px 4px;
   animation: fadeIn .2s;
 }
 .modal-header {
@@ -369,7 +371,7 @@ main{
   justify-content: space-between;
   background: linear-gradient(90deg, var(--header-background-color) 0%, var(--aqua) 100%);
   color: var(--light-font-color);
-  border-top-left-radius: 5px;
+  border-top-left-radius: 5px !important;
   border-top-right-radius: 5px;
 }
 .modal-body {
@@ -386,6 +388,7 @@ main{
 }
 .modal-content .btn{
   font-family: 'Josefin Sans';
+  border-radius: 5px !important;
 
 }
 .modal-buttons {
