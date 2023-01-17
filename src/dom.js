@@ -426,7 +426,8 @@ const dom = (() => {
             const taskDate = document.createElement('p');
             const taskEditIcon = document.createElement('i');
             const taskTrashIcon = document.createElement('i');
-            const taskInfoIcon = document.createElement('i');
+            //not sure I want these
+            //const taskInfoIcon = document.createElement('i');
          
             tasksNumber = i+1;
             tasksCount.textContent = `(${tasksNumber})`;
@@ -489,14 +490,14 @@ const dom = (() => {
             taskTrashIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
 
             // TASK INFO ICON
-            taskInfoIcon.classList.add(
+/*             taskInfoIcon.classList.add(
                 'fa-solid',
                 'task-icon',
                 'scale-element',
                 'fa-circle-info'
             );
             taskInfoIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
-            taskInfoIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
+            taskInfoIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex); */
 
                 // APPENDS
             taskIconAndTextDiv.appendChild(taskIcon);
@@ -504,7 +505,8 @@ const dom = (() => {
             taskInfo.appendChild(taskDate);
             taskInfo.appendChild(taskEditIcon);
             taskInfo.appendChild(taskTrashIcon);
-            taskInfo.appendChild(taskInfoIcon);
+            //not sure I want
+            //taskInfo.appendChild(taskInfoIcon);
             taskDiv.appendChild(taskIconAndTextDiv);
             taskDiv.appendChild(taskInfo);
             tasksListDiv.appendChild(taskDiv);

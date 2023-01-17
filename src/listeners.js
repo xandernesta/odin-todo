@@ -25,6 +25,11 @@ const handlers = (() => {
             }
             //Click to reset form on click on add-task icon
             if(target.classList.contains('add-task')){
+                //selects the .modal-header div and then the firstChild of that div which is the h2 that I want to change to Add Task
+                let modalH2 = document.querySelector('.modal-header').firstChild;
+                modalH2.textContent = "Add Task";
+                let modalTaskButton = taskModal.querySelector('.modal-task-button');
+                modalTaskButton.textContent = "Add";
                 form.reset();
             }
             //Clicks in Modal on task icon for each task-div
@@ -36,16 +41,21 @@ const handlers = (() => {
                     
                     console.log(JSON.stringify(tasks.retrieveTask(projectIndex,taskIndex)))
                     let [{title,details,dueDate,priority}] = tasks.retrieveTask(projectIndex,taskIndex);
-                    console.log(dueDate);
+                    //selects the .modal-header div and then the firstChild of that div which is the h2 that I want to change to Edit Task
+                    let modalH2 = document.querySelector('.modal-header').firstChild;
+                    modalH2.textContent = "Edit Task";
+                    //selects all the inputs and adds the task's info to the respective fields
                     let modalTitleInput = document.getElementById('modal-title');
                     modalTitleInput.value = title;
-                    
                     let modalTaskDetail = document.querySelector('.task-details');
                     modalTaskDetail.value = details;
                     let dueDateInput = document.getElementById('due-date');
                     dueDateInput.valueAsDate = new Date(dueDate); //.valueAsDate is a unique property for <input type=date> elements
                     let prioInput = document.querySelector('.task-priority');
                     prioInput.value = priority;
+                    //changes the button from Add to Edit
+                    let modalTaskButton = taskModal.querySelector('.modal-task-button');
+                    modalTaskButton.textContent = "Edit";
                     
                 }
             /*  if (target.classList.contains('delete-task')){
