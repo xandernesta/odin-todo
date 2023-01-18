@@ -56,6 +56,9 @@ const handlers = (() => {
                     //changes the button from Add to Edit
                     let modalTaskButton = taskModal.querySelector('.modal-task-button');
                     modalTaskButton.textContent = "Edit";
+
+                    //
+                    dom.selectTaskModalProject(projectIndex);
                     
                 }
             /*  if (target.classList.contains('delete-task')){
@@ -68,9 +71,6 @@ const handlers = (() => {
             }
             */
             } 
-
-
-
         })
 
         

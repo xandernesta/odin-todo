@@ -269,6 +269,16 @@ const dom = (() => {
                           <option value="high">😲 High</option>
                         </select>
                       </div>
+
+                      <!-- PROJECTS LIST -->
+                      <div class="form-group">
+                      <label for="projects">Projects</label>
+                      <select class="project-titles form-select" name="projects" required>
+                        <option value="" disabled="" selected="">Projects</option>
+                       <!-- <option value=""></option>  -->
+                      </select>
+                    </div>
+
                   `//NEED TO MAKE A NEW FORM FIELD FOR TASKS PROJECT
                     taskModalContentForm.appendChild(taskModalBody);
                     const taskModalFooter = document.createElement('div');
@@ -337,21 +347,40 @@ const dom = (() => {
 
     function showMainTitle(index){
         const allMenuLinkTexts = document.querySelectorAll('.task-link-text');
-        const mainTitleText = document.querySelector('.main-title-text')
+        const mainTitleText = document.querySelector('.main-title-text');
         mainTitleText.textContent = allMenuLinkTexts[index].textContent;
  
     }
     function changeMainTitle(target, index){
         //mainTitleIcon.className = '';
+      const mainTitleText = document.querySelector('.main-title-text');
 
-        // TITLE OF TASKS FROM THE MENU
-        if (
-          target.classList.contains('task-link') ||
-          //target.classList.contains('menu-link-icon') ||
-          target.classList.contains('task-link-text')
-        ) {
-          showMainTitle(index);
-        }
+      // TITLE OF TASKS FROM THE MENU
+      if (
+        target.classList.contains('task-link') ||
+        //target.classList.contains('menu-link-icon') ||
+        target.classList.contains('task-link-text')
+      ) {
+        showMainTitle(index);
+      }
+      
+      // TITLE OF PROJECT FROM MENU
+      if (
+        target.classList.contains('project-link') ||
+        //target.classList.contains('project-icon') ||
+        target.classList.contains('project-text') ||
+        target.classList.contains('delete-project') ||
+        target.classList.contains('edit-project') ||
+        target.classList.contains('project-icon-and-text-div') ||
+        target.classList.contains('project-default-icons-div')
+      ) {
+        let projectsList = [];
+        let dataLinkIndex = index;
+        projectsList = projects.getAllProjects();
+        let title = projectsList[index-4].title;
+        console.table(projectsList)
+        mainTitleText.textContent = title;
+      }
     }
     function showAllTasks(index){
         const allTasksList = tasks.getAllTasks()
@@ -375,14 +404,12 @@ const dom = (() => {
                 currentTasksList = tasksList.filter(task => {
                 const dateDue = new Date(task.dueDate);
                 return dateDue <= endOfDay(today)
-                    //return format(task.dueDate, 'MM/dd/yyyy') <= today;
                 });
                 console.log(`${endOfDay(today)}`);
                 console.log('Today tasklist: ');
                 console.log(tasksList);
                 console.log('Today CurrentTaskslist: ');
                 console.table(currentTasksList);
-                //console.log(`task.dueDate: ${task.dueDate}`);
                 generateTasksDom(currentTasksList);
                 break;
             case 2:
@@ -407,7 +434,10 @@ const dom = (() => {
                 break;
 
             default:
-                return currentTasksList; 
+              currentTasksList = tasksList.filter(task => {
+                return task.projectIndex === linkIndex-4
+              });
+              generateTasksDom(currentTasksList);
         }
     }
     function generateTasksDom(array){
@@ -489,7 +519,7 @@ const dom = (() => {
             taskTrashIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
             taskTrashIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
 
-            // TASK INFO ICON
+            // TASK INFO ICON - not I want 
 /*             taskInfoIcon.classList.add(
                 'fa-solid',
                 'task-icon',
@@ -513,12 +543,105 @@ const dom = (() => {
 
         }
     }
+    function showAllProjects(){
+      let projectsArr = projects.getAllProjects();
+      generateProjectsLinks(projectsArr);
+      populateModalProjectTitles(projectsArr);
+    }
+    function generateProjectsLinks(projectsArr){
+      const projectsCount = document.querySelector('.projects-count');
+      let projectsLinksDiv = document.querySelector('.project-links-div');
+
+      projectsCount.textContent = projectsArr.length;
+      projectsLinksDiv.textContent = '';
+
+      for (let i = 0; i < projectsArr.length; i++){
+        const projectLink = document.createElement('a');
+        const projectIconAndTextDiv = document.createElement('div');
+        //const projectIcon = document.createElement('i');
+        const projectText = document.createElement('p');
+        const projectIconsDiv = document.createElement('div');
+        const projectEditIcon = document.createElement('i');
+        const projectTrashIcon = document.createElement('i');
+
+        // PROJECT ICON/TEXT AND DEFAULT ICONS DIVS AND ELEMENTS
+        projectIconAndTextDiv.classList.add(
+          'project-icon-and-text-div',
+          'project',
+          'select'
+        );
+        projectIconAndTextDiv.setAttribute('data-link-index', i+4); //i+4 because there will be 4 links for all task above the projects, projects need their own data-link-index so changeTasksList can by default show task belonging to a specific project
+        projectIconsDiv.classList.add(
+          'project-default-icons-div',
+          'project',
+          'select'
+        );
+        projectIconsDiv.setAttribute('data-link-index', i+4);
+        
+        // PROJECT LINKS CLASSES AND ATTRIBUTES
+        projectLink.classList.add('link', 'project-link', 'project', 'select');
+        projectLink.setAttribute('href', '#');
+        projectLink.setAttribute('data-link-index', i+4);
+        
+        // PROJECT TEXT
+        projectText.classList.add('project-text', 'project', 'select');
+        projectText.textContent = projectsArr[i].title;
+        projectText.setAttribute('data-link-index', i+4);
+
+        // PROJECT DEFAULT ICONS
+        projectEditIcon.classList.add(
+          'fa-regular',
+          'fa-pen-to-square',
+          'project',
+          'project-icon',
+          'edit-project',
+          'select',
+          'scale-element',
+          'padding-right'
+        );
+        projectEditIcon.setAttribute('data-link-index', i+4);
+
+        projectTrashIcon.classList.add(
+          'fa-solid',
+          'fa-trash-can',
+          'project',
+          'project-icon',
+          'delete-project',
+          'select',
+          'scale-element'
+        );
+        projectTrashIcon.setAttribute('data-link-index', i+4);
+
+        // APPENDS
+        projectIconsDiv.appendChild(projectEditIcon);
+        projectIconsDiv.appendChild(projectTrashIcon);
+        //projectIconAndTextDiv.appendChild(projectIcon);
+        projectIconAndTextDiv.appendChild(projectText);
+        projectLink.appendChild(projectIconAndTextDiv);
+        projectLink.appendChild(projectIconsDiv);
+        projectsLinksDiv.appendChild(projectLink);
+      }
+    }
+    function populateModalProjectTitles(projectsArr){
+      let projectTitles = document.querySelector('.project-titles')
+      for(let i =0; i < projectsArr.length; i++){
+        projectTitles.options[projectTitles.options.length] = new Option(projectsArr[i].title, i);
+      }
+    }
+    function selectTaskModalProject (projectIndex){
+      let selectedProject = document.querySelector('.project-titles');
+      selectedProject.value = projectIndex;
+      //selectedProject.setAttribute('selected');
+      
+    }
     return {
         selectLink,
         showMainTitle,
         changeMainTitle,
         showAllTasks,
-        changeTasksList
+        changeTasksList,
+        showAllProjects,
+        selectTaskModalProject
     }
 })();
 

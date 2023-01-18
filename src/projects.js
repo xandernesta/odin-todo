@@ -19,6 +19,7 @@ const projects = (() => {
         let projectsFromStorage = JSON.parse(localStorage.getFromStorage('projects'));
         projectsList = projectsFromStorage;
         projectsList[index].title = title;
+        localStorage.addToStorage(projectsList);
     }
     function getAllProjects(){
         let projectsFromStorage = JSON.parse(localStorage.getFromStorage('projects'));
