@@ -1,5 +1,6 @@
 import dom from './dom';
 import tasks from './tasks.js';
+import projects from './projects.js'
 import {format, endOfDay, endOfWeek} from 'date-fns'
 
 const handlers = (() => {
@@ -7,7 +8,7 @@ const handlers = (() => {
     function listenClicks(){
         //Variables to keep track of indexes and tasks
         let projectIndex;
-        let taskIndex;    
+        let taskID;    
 
         //Load selected Tasks from sidebar links
         document.addEventListener('click', (event) => {
@@ -34,13 +35,13 @@ const handlers = (() => {
             }
             //Clicks in Modal on task icon for each task-div
             if (target.classList.contains('task-icon')) {
-                let projectIndex = parseInt(target.getAttribute('data-project-index'),10);
-                let taskIndex = parseInt(target.getAttribute('data-task-index'),10);
+                projectIndex = parseInt(target.getAttribute('data-project-index'),10);
+                taskID = parseInt(target.getAttribute('data-task-id'),10);
                 
                 if (target.classList.contains('edit-task')){
                     
-                    console.log(JSON.stringify(tasks.retrieveTask(projectIndex,taskIndex)))
-                    let [{title,details,dueDate,priority}] = tasks.retrieveTask(projectIndex,taskIndex);
+                    console.log("retrieved task:", JSON.stringify(tasks.retrieveTask(projectIndex,taskID)))
+                    let {title,details,dueDate,priority} = tasks.retrieveTask(projectIndex,taskID);
                     //selects the .modal-header div and then the firstChild of that div which is the h2 that I want to change to Edit Task
                     let modalH2 = document.querySelector('.modal-header').firstChild;
                     modalH2.textContent = "Edit Task";
@@ -56,31 +57,57 @@ const handlers = (() => {
                     //changes the button from Add to Edit
                     let modalTaskButton = taskModal.querySelector('.modal-task-button');
                     modalTaskButton.textContent = "Edit";
+                    modalTaskButton.classList.add('edit-submit');
 
-                    //
-                    dom.selectTaskModalProject(projectIndex);
+                    //DISPLAYS THE PROJECT THE SELECTED TASK BELONGS TO
+                    dom.selectProjectForTaskModal(projectIndex);
+                }
+                if (target.classList.contains('delete-task')){
+                    tasks.removeTask(projectIndex,taskID);
+                    dom.changeTasksList(selectedLink.getAttribute('data-link-index'));
+                    
                     
                 }
-            /*  if (target.classList.contains('delete-task')){
-                //TODO
-                return
-            }
-            if (target.classList.contains('delete-task')){
-                //TODO
-                return
-            }
-            */
+            
             } 
-        })
+            //SUBMITTING EDITED TASK
+            if (target.classList.contains('edit-submit')){
+                let modalTitleInput = document.getElementById('modal-title');
+                let modalTaskDetail = document.querySelector('.task-details');
+                let dueDateInput = document.getElementById('due-date');
+                let prioInput = document.querySelector('.task-priority');
+                let projectSelector = document.querySelector('.project-titles');
 
-        
+                console.log("here is the task before edit:")
+                console.table(tasks.retrieveTask(projectIndex,taskID))
+                console.log(`here is modalTitleInput ${modalTitleInput.value}`);
+                console.log(`here is projectInput ${modalTaskDetail.value}`)
+                console.log(`here is projectInput ${projectIndex}`);
+                console.log(`here is prirority Input ${prioInput.value}`);
+                console.log(`here is taskInput ${taskID}`);
+                tasks.editTask(String(modalTitleInput.value), String(modalTaskDetail.value), new Date(dueDateInput.valueAsDate), prioInput.value, parseInt(projectIndex), parseInt(projectSelector.value), parseInt(taskID));
+                //dom.showAllTasks(selectedLink);
+                //dom.selectLink(target, linkIndex)
+            }
+
+            //SELECTING EDIT PROJECT ICON
+            if (target.classList.contains('edit-project')){
+                let projectIconParent = (event.target.parentNode).parentNode;
+                linkIndex = parseInt(projectIconParent.getAttribute('data-link-index'), 10);
+                dom.selectLink(target, linkIndex, 'edit') //Trying to figure out why parts of the project buttons are not triggering the selected
+            }
+
+        })
+    
+
+
         
     }
 
     return {
         listenClicks
 /*         handleTaskIconClick,
-        editTask */
+        */
     };
 })();
 

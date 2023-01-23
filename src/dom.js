@@ -46,6 +46,7 @@ const dom = (() => {
         link1.setAttribute('data-title', 'all');
             const pLink1 = document.createElement('p');
             pLink1.classList.add('task-link-text','select');
+            pLink1.setAttribute('data-link-index', '0');
             pLink1.textContent = "All";
         link1.appendChild(pLink1);
         //Second link - Today
@@ -56,6 +57,7 @@ const dom = (() => {
         link2.setAttribute('data-title', 'today');
             const pLink2 = document.createElement('p');
             pLink2.classList.add('task-link-text','select');
+            pLink2.setAttribute('data-link-index', '1');
             pLink2.textContent = "Today";
         link2.appendChild(pLink2);
         //Third link - This Week
@@ -66,6 +68,7 @@ const dom = (() => {
         link3.setAttribute('data-title', 'week');
             const pLink3 = document.createElement('p');
             pLink3.classList.add('task-link-text','select');
+            pLink3.setAttribute('data-link-index', '2');
             pLink3.textContent = "This Week";
         link3.appendChild(pLink3);
         //Fourth link - Completed
@@ -76,6 +79,7 @@ const dom = (() => {
         link4.setAttribute('data-title', 'completed');
             const pLink4 = document.createElement('p');
             pLink4.classList.add('task-link-text','select');
+            pLink4.setAttribute('data-link-index', '3');
             pLink4.textContent = "Completed";
         link4.appendChild(pLink4);
         //append this to taskLinks div
@@ -279,13 +283,13 @@ const dom = (() => {
                       </select>
                     </div>
 
-                  `//NEED TO MAKE A NEW FORM FIELD FOR TASKS PROJECT
+                  `
                     taskModalContentForm.appendChild(taskModalBody);
                     const taskModalFooter = document.createElement('div');
                     taskModalFooter.classList.add('modal-footer','modal-buttons');
                     taskModalFooter.innerHTML = `
                             <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary modal-task-button">Add</button> 
+                            <button type="submit" class="btn btn-primary modal-task-button" data-bs-dismiss="modal">Add</button> 
                             `
                     taskModalContentForm.appendChild(taskModalFooter);
 
@@ -336,12 +340,57 @@ const dom = (() => {
 
     function selectLink(target, index, action) {
         const allLinks = document.querySelectorAll('.link');
+        const allProjectsLinks = document.querySelectorAll('.project-link');
+        const menuTitle = target.getAttribute('data-title');
         allLinks.forEach((link) => { 
             link.classList.remove('selected-link');
         });
+        //IF LINK'S TEXT IS CLICKED INSTEAD OF BUTTON
+        if(target.parentElement.classList.contains('link')){
+          target.parentElement.classList.add('selected-link');
+        }
         // IF CLICKED DIRECTLY ON LINK (BOTH - MENU OR PROJECT)
-        if (target.classList.contains('link')) {
-            target.classList.add('selected-link');
+        if (target.classList.contains('link') ) {
+          target.classList.add('selected-link');
+          // IF WAS CLICKED TO EDIT PROJECT LINK
+          if (action === 'edit') {
+            allProjectsLinks[index].classList.add('selected-link'); // Keep project visually selected after editing
+          }
+        // IF CLICKED ON MENU LINK ICON OR TEXT
+        } else if (
+          target.classList.contains('menu-link-icon') ||
+          target.classList.contains('menu-link-text')
+          ) {
+          target.parentElement.classList.add('selected-link');
+        }
+            // IF CLICKED SOMEWHERE ON PROJECT LINK
+        if (target.classList.contains('project')) {
+          //changeTasksList(index);
+
+          // IF CLICKED ON PROJECT ICON OR TEXT OR EDIT/DELETE ICONS
+          if (
+            target.classList.contains('project-icon') ||
+            target.classList.contains('project-text') ||
+            target.classList.contains('edit-project') ||
+            target.classList.contains('delete-project')
+          ) {
+            target.parentElement.parentElement.classList.add('selected-link');
+
+            // IF CLICKED ON PROJECT ELEMENTS DIVS
+          } else if (
+            target.classList.contains('project-icon-and-text-div') ||
+            target.classList.contains('project-default-icons-div')
+          ) {
+            target.parentElement.classList.add('selected-link');
+          }
+        }
+        // IF CLICKED SOMEWHERE ON MENU LINK
+        if (
+          target.classList.contains('menu-link') ||
+          target.classList.contains('menu-link-icon') ||
+          target.classList.contains('menu-link-text')
+        ) {
+          changeTasksList(index);
         }
     }
 
@@ -395,7 +444,7 @@ const dom = (() => {
         let tasksListDiv = document.querySelector('.tasks-list');
 
         //filter all tasks down according to the link selected
-        switch (linkIndex) {
+        switch (parseInt(linkIndex,10)) {
             case 0:
                 currentTasksList = tasksList;
                 generateTasksDom(currentTasksList);
@@ -445,6 +494,7 @@ const dom = (() => {
         let tasksListDiv = document.querySelector('.tasks-list');
         let tasksCount = document.querySelector('.tasks-count');
         let tasksNumber = 0;
+        tasksCount.textContent = `(${tasksNumber})`;
         tasksListDiv.innerHTML = '';
         //Loops through array to generate new tasks list
         for(let i = 0; i < currentTasksList.length; i++){
@@ -459,12 +509,12 @@ const dom = (() => {
             //not sure I want these
             //const taskInfoIcon = document.createElement('i');
          
-            tasksNumber = i+1;
+            tasksNumber += 1;
             tasksCount.textContent = `(${tasksNumber})`;
             taskDiv.classList.add('task-div', 'hover-element');
             taskIconAndTextDiv.classList.add('flex');
             taskDiv.setAttribute('data-project-index', currentTasksList[i].projectIndex);
-            taskDiv.setAttribute('data-task-index', currentTasksList[i].taskIndex);
+            taskDiv.setAttribute('data-task-id', currentTasksList[i].taskID);
 
             if (currentTasksList[i].priority === 'low') {
             taskIcon.classList.add('low-priority');
@@ -476,11 +526,11 @@ const dom = (() => {
             taskIcon.classList.add('fal', 'padding-right');
             } 
             taskIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
-            taskIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
+            taskIcon.setAttribute('data-task-id', currentTasksList[i].taskID);
             taskText.classList.add('task-text');
             taskText.textContent = currentTasksList[i].title;
             taskText.setAttribute('data-project-index', currentTasksList[i].projectIndex);
-            taskText.setAttribute('data-task-index', currentTasksList[i].taskIndex);
+            taskText.setAttribute('data-task-id', currentTasksList[i].taskID);
 
             // TASK INFO DIV
             taskInfo.classList.add('flex');
@@ -503,7 +553,7 @@ const dom = (() => {
                 'padding-right'
             );
             taskEditIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
-            taskEditIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
+            taskEditIcon.setAttribute('data-task-id', currentTasksList[i].taskID);
             taskEditIcon.setAttribute('data-bs-toggle','modal');
             taskEditIcon.setAttribute('data-bs-target','#task-modal');
 
@@ -517,7 +567,7 @@ const dom = (() => {
                 'padding-right'
             );
             taskTrashIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
-            taskTrashIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex);
+            taskTrashIcon.setAttribute('data-task-id', currentTasksList[i].taskID);
 
             // TASK INFO ICON - not I want 
 /*             taskInfoIcon.classList.add(
@@ -527,7 +577,7 @@ const dom = (() => {
                 'fa-circle-info'
             );
             taskInfoIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
-            taskInfoIcon.setAttribute('data-task-index', currentTasksList[i].taskIndex); */
+            taskInfoIcon.setAttribute('data-task-id', currentTasksList[i].taskID); */
 
                 // APPENDS
             taskIconAndTextDiv.appendChild(taskIcon);
@@ -628,12 +678,13 @@ const dom = (() => {
         projectTitles.options[projectTitles.options.length] = new Option(projectsArr[i].title, i);
       }
     }
-    function selectTaskModalProject (projectIndex){
+    function selectProjectForTaskModal (projectIndex){
       let selectedProject = document.querySelector('.project-titles');
       selectedProject.value = projectIndex;
       //selectedProject.setAttribute('selected');
       
     }
+    
     return {
         selectLink,
         showMainTitle,
@@ -641,7 +692,7 @@ const dom = (() => {
         showAllTasks,
         changeTasksList,
         showAllProjects,
-        selectTaskModalProject
+        selectProjectForTaskModal
     }
 })();
 

@@ -1,7 +1,6 @@
 import dom from './dom.js';
 import listeners from './listeners.js';
 import './style.css';
-import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
