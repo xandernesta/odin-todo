@@ -58,7 +58,7 @@ const dom = (() => {
             const pLink2 = document.createElement('p');
             pLink2.classList.add('task-link-text','select');
             pLink2.setAttribute('data-link-index', '1');
-            pLink2.textContent = "Today";
+            pLink2.textContent = "Today or Past Due";
         link2.appendChild(pLink2);
         //Third link - This Week
         const link3 = document.createElement('a');
@@ -193,61 +193,6 @@ const dom = (() => {
                       <!--<p class="modal-title-error hide">Please fill out this field.</p> -->
                     </div>
           
-                    <!-- RADIO BUTTONS -->
-                    <div class="radio-form hide">
-                      <p>Icon</p>
-                      <div class="project-icons">
-                        <label class="radio-before">
-                          <span class="radio-input">
-                            <input type="radio" id="flower-daffodil" class="icon" name="projectFormIcon" value="fa-flower-daffodil" checked="">
-                            <span class="radio-control"><i class="fal fa-flower-daffodil fa-fw"></i></span>
-                          </span>
-                        </label>
-                        <label class="radio-before">
-                          <span class="radio-input">
-                            <input type="radio" id="book" class="icon" name="projectFormIcon" value="fa-book">
-                            <span class="radio-control"><i class="fal fa-book fa-fw"></i></span>
-                          </span>
-                        </label>
-                        <label class="radio-before">
-                          <span class="radio-input">
-                            <input type="radio" id="tools" class="icon" name="projectFormIcon" value="fa-tools">
-                            <span class="radio-control"><i class="fal fa-tools fa-fw"></i></span>
-                          </span>
-                        </label>
-                        <label class="radio-before">
-                          <span class="radio-input">
-                            <input type="radio" id="volleyball-ball" class="icon" name="projectFormIcon" value="fa-volleyball-ball">
-                            <span class="radio-control"><i class="fal fa-volleyball-ball fa-fw"></i></span>
-                          </span>
-                        </label>
-                        <label class=" radio radio-before">
-                          <span class="radio-input">
-                            <input type="radio" id="sack-dollar" class="icon" name="projectFormIcon" value="fa-sack-dollar">
-                            <span class="radio-control"><i class="fal fa-sack-dollar fa-fw"></i></span>
-                          </span>
-                        </label>
-                        <label class="radio radio-before">
-                          <span class="radio-input">
-                            <input type="radio" id="pizza-slice" class="icon" name="projectFormIcon" value="fa-pizza-slice">
-                            <span class="radio-control"><i class="fal fa-pizza-slice fa-fw"></i></span>
-                          </span>
-                        </label>
-                        <label class="radio-before">
-                          <span class="radio-input">
-                            <input type="radio" id="backpack" class="icon" name="projectFormIcon" value="fa-backpack">
-                            <span class="radio-control"><i class="fal fa-backpack fa-fw"></i></span>
-                          </span>
-                        </label>
-                        <label class="radio-before">
-                          <span class="radio-input">
-                            <input type="radio" id="gift" class="icon" name="projectFormIcon" value="fa-gift">
-                            <span class="radio-control"><i class="fal fa-gift fa-fw"></i></span>
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-          
                     <!-- MODAL CONTENT FOR A TASK -->
                     
           
@@ -297,7 +242,8 @@ const dom = (() => {
                 taskModalDialog.appendChild(taskModalContent);
                 taskAddModal.appendChild(taskModalDialog);
         tasksTitleDiv.appendChild(taskAddModal); //Add taskAddModal to main-title-div
-
+        
+            
         //creating the actual task list below the tasksTitleDiv
         let tasksListDiv = document.createElement('div');
         tasksListDiv.classList.add('tasks-list');
@@ -484,7 +430,7 @@ const dom = (() => {
 
             default:
               currentTasksList = tasksList.filter(task => {
-                return task.projectIndex === linkIndex-4
+                return task.projectID === linkIndex-4
               });
               generateTasksDom(currentTasksList);
         }
@@ -513,7 +459,7 @@ const dom = (() => {
             tasksCount.textContent = `(${tasksNumber})`;
             taskDiv.classList.add('task-div', 'hover-element');
             taskIconAndTextDiv.classList.add('flex');
-            taskDiv.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskDiv.setAttribute('data-project-index', currentTasksList[i].projectID);
             taskDiv.setAttribute('data-task-id', currentTasksList[i].taskID);
 
             if (currentTasksList[i].priority === 'low') {
@@ -525,11 +471,11 @@ const dom = (() => {
             } else {
             taskIcon.classList.add('fal', 'padding-right');
             } 
-            taskIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskIcon.setAttribute('data-project-index', currentTasksList[i].projectID);
             taskIcon.setAttribute('data-task-id', currentTasksList[i].taskID);
             taskText.classList.add('task-text');
             taskText.textContent = currentTasksList[i].title;
-            taskText.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskText.setAttribute('data-project-index', currentTasksList[i].projectID);
             taskText.setAttribute('data-task-id', currentTasksList[i].taskID);
 
             // TASK INFO DIV
@@ -552,7 +498,7 @@ const dom = (() => {
                 'scale-element',
                 'padding-right'
             );
-            taskEditIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskEditIcon.setAttribute('data-project-index', currentTasksList[i].projectID);
             taskEditIcon.setAttribute('data-task-id', currentTasksList[i].taskID);
             taskEditIcon.setAttribute('data-bs-toggle','modal');
             taskEditIcon.setAttribute('data-bs-target','#task-modal');
@@ -566,9 +512,50 @@ const dom = (() => {
                 'scale-element',
                 'padding-right'
             );
-            taskTrashIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskTrashIcon.setAttribute('data-project-index', currentTasksList[i].projectID);
             taskTrashIcon.setAttribute('data-task-id', currentTasksList[i].taskID);
-
+            taskTrashIcon.setAttribute('data-bs-toggle','modal');
+            taskTrashIcon.setAttribute('data-bs-target','#delete-task-modal');
+              //create DeleteTaskConfirm modal
+        const taskDeleteModal = document.createElement('div');
+        taskDeleteModal.classList.add('modal','modal-card','fade');
+        taskDeleteModal.setAttribute('id','delete-task-modal');
+            // create modal dialog nested under taskDeleteModal - for bootstrap
+            const taskDeleteModalDialog = document.createElement('div');
+            taskDeleteModalDialog.classList.add('modal-dialog', 'modal-dialog-centered');
+            //create modal content nested under taskModalDialog - for boostrap
+            const taskDeleteModalContent = document.createElement('div');
+            taskDeleteModalContent.classList.add('modal-content');
+            //create deletion modal header
+            const taskDeleteModalHeader = document.createElement('div');
+            taskDeleteModalHeader.classList.add('modal-header','delete-task-header');
+                        const taskDeleteModalH1 = document.createElement('h2');
+                        taskDeleteModalH1.textContent = 'Delete Task';
+                        const taskDeleteModalH1CloseBtn = document.createElement('button');
+                        taskDeleteModalH1CloseBtn.classList.add('btn-close', 'btn-close-white');
+                        taskDeleteModalH1CloseBtn.setAttribute('data-bs-dismiss','modal');
+                        taskDeleteModalH1CloseBtn.setAttribute('data-bs-target','#delete-task-modal');
+            taskDeleteModalHeader.appendChild(taskDeleteModalH1);
+            taskDeleteModalHeader.appendChild(taskDeleteModalH1CloseBtn);
+            taskDeleteModalContent.appendChild(taskDeleteModalHeader);
+            const taskDeleteModalBody = document.createElement('div');
+            taskDeleteModalBody.classList.add('modal-body');
+            taskDeleteModalBody.innerHTML = `
+            <p class="delete-task-body-text">Are you sure?<br>
+            Task <span class="task-to-delete-title">Task 1</span> will be gone forever!</p>
+            `
+            taskDeleteModalContent.appendChild(taskDeleteModalBody);
+            const taskDeleteModalFooter = document.createElement('div'); 
+            taskDeleteModalFooter.classList.add('modal-footer','modal-buttons');
+            taskDeleteModalFooter.innerHTML = `
+            <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary modal-task-delete-button" data-bs-dismiss="modal">Delete</button> 
+            `
+            taskDeleteModalContent.appendChild(taskDeleteModalFooter);
+            //append content to dialog and dialog to taskDeleteModal
+            taskDeleteModalDialog.appendChild(taskDeleteModalContent);
+            taskDeleteModal.appendChild(taskDeleteModalDialog);
+            
             // TASK INFO ICON - not I want 
 /*             taskInfoIcon.classList.add(
                 'fa-solid',
@@ -576,7 +563,7 @@ const dom = (() => {
                 'scale-element',
                 'fa-circle-info'
             );
-            taskInfoIcon.setAttribute('data-project-index', currentTasksList[i].projectIndex);
+            taskInfoIcon.setAttribute('data-project-index', currentTasksList[i].projectID);
             taskInfoIcon.setAttribute('data-task-id', currentTasksList[i].taskID); */
 
                 // APPENDS
@@ -589,6 +576,7 @@ const dom = (() => {
             //taskInfo.appendChild(taskInfoIcon);
             taskDiv.appendChild(taskIconAndTextDiv);
             taskDiv.appendChild(taskInfo);
+            taskDiv.appendChild(taskDeleteModal);
             tasksListDiv.appendChild(taskDiv);
 
         }
@@ -678,9 +666,9 @@ const dom = (() => {
         projectTitles.options[projectTitles.options.length] = new Option(projectsArr[i].title, i);
       }
     }
-    function selectProjectForTaskModal (projectIndex){
+    function selectProjectForTaskModal (projectID){
       let selectedProject = document.querySelector('.project-titles');
-      selectedProject.value = projectIndex;
+      selectedProject.value = projectID;
       //selectedProject.setAttribute('selected');
       
     }

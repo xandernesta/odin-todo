@@ -6,6 +6,7 @@
     --dark-gray:rgb(94, 94, 94);
     --light-gray: #e5e5e5;
     --grey: #E6E6E6;
+    --red: rgb(138, 8, 8);
     --header-background-color:rgb(9, 61, 107);
     --light-font-color: rgb(238, 238, 238);
     --sidebar-background-color:rgb(14, 100, 100, .8);
@@ -409,6 +410,32 @@ main{
 .modal-task-button:hover{
   background-color: var(--header-background-color) !important;
   border-color: var(--header-background-color) !important;
+}
+.modal-header.delete-task-header{
+  background: var(--red) !important;
+}
+#delete-task-modal .btn-close{
+  color:white;
+}
+#delete-task-modal.modal-body{
+  padding-bottom: .25rem;
+}
+.modal-body .delete-task-body-text{
+  font-size: 1.25rem;
+  margin: 0;
+  padding-bottom: 0;
+}
+.task-to-delete-title{
+  font-size:1.5rem;
+  font-weight: 600;
+}
+.modal-task-delete-button{
+  background-color: var(--red) !important;
+  border-color: var(--red) !important;
+}
+#delete-task-modal .modal-footer{
+  margin: 0px 16px 0px 16px;
+  padding: 8px 12px 8px 12px;
 }
 /*Footer*/
 .footer {

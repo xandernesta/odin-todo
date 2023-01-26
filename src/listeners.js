@@ -7,7 +7,7 @@ const handlers = (() => {
     
     function listenClicks(){
         //Variables to keep track of indexes and tasks
-        let projectIndex;
+        let projectID;
         let taskID;    
 
         //Load selected Tasks from sidebar links
@@ -35,13 +35,13 @@ const handlers = (() => {
             }
             //Clicks in Modal on task icon for each task-div
             if (target.classList.contains('task-icon')) {
-                projectIndex = parseInt(target.getAttribute('data-project-index'),10);
+                projectID = parseInt(target.getAttribute('data-project-index'),10);
                 taskID = parseInt(target.getAttribute('data-task-id'),10);
                 
                 if (target.classList.contains('edit-task')){
                     
-                    console.log("retrieved task:", JSON.stringify(tasks.retrieveTask(projectIndex,taskID)))
-                    let {title,details,dueDate,priority} = tasks.retrieveTask(projectIndex,taskID);
+                    console.log("retrieved task:", JSON.stringify(tasks.retrieveTask(projectID,taskID)))
+                    let {title,details,dueDate,priority} = tasks.retrieveTask(projectID,taskID);
                     //selects the .modal-header div and then the firstChild of that div which is the h2 that I want to change to Edit Task
                     let modalH2 = document.querySelector('.modal-header').firstChild;
                     modalH2.textContent = "Edit Task";
@@ -60,16 +60,19 @@ const handlers = (() => {
                     modalTaskButton.classList.add('edit-submit');
 
                     //DISPLAYS THE PROJECT THE SELECTED TASK BELONGS TO
-                    dom.selectProjectForTaskModal(projectIndex);
+                    dom.selectProjectForTaskModal(projectID);
                 }
                 if (target.classList.contains('delete-task')){
-                    tasks.removeTask(projectIndex,taskID);
-                    dom.changeTasksList(selectedLink.getAttribute('data-link-index'));
-                    
-                    
+                    projectID = parseInt(target.getAttribute('data-project-index'),10);
+                    taskID = parseInt(target.getAttribute('data-task-id'),10);
+                    let taskToDeleteTitle = document.querySelector('.task-to-delete-title');
+                    let {title} = tasks.retrieveTask(projectID,taskID);
+                    taskToDeleteTitle.textContent = ` "${title}"`;
+                    /*  */
+
                 }
             
-            } 
+            }
             //SUBMITTING EDITED TASK
             if (target.classList.contains('edit-submit')){
                 let modalTitleInput = document.getElementById('modal-title');
@@ -79,16 +82,34 @@ const handlers = (() => {
                 let projectSelector = document.querySelector('.project-titles');
 
                 console.log("here is the task before edit:")
-                console.table(tasks.retrieveTask(projectIndex,taskID))
+                console.table(tasks.retrieveTask(projectID,taskID))
                 console.log(`here is modalTitleInput ${modalTitleInput.value}`);
                 console.log(`here is projectInput ${modalTaskDetail.value}`)
-                console.log(`here is projectInput ${projectIndex}`);
+                console.log(`here is projectInput ${projectID}`);
                 console.log(`here is prirority Input ${prioInput.value}`);
                 console.log(`here is taskInput ${taskID}`);
-                tasks.editTask(String(modalTitleInput.value), String(modalTaskDetail.value), new Date(dueDateInput.valueAsDate), prioInput.value, parseInt(projectIndex), parseInt(projectSelector.value), parseInt(taskID));
+                tasks.editTask(String(modalTitleInput.value), String(modalTaskDetail.value), dueDateInput.valueAsDate, prioInput.value, parseInt(projectID), parseInt(projectSelector.value), parseInt(taskID));
                 //dom.showAllTasks(selectedLink);
                 //dom.selectLink(target, linkIndex)
             }
+            // Click to Add task in Add-Task-Modal
+            if (target.classList.contains('modal-task-button') && !target.classList.contains('edit-submit')){
+                let modalTitleInput = document.getElementById('modal-title').value;
+                let modalTaskDetail = document.querySelector('.task-details').value;
+                let dueDateInput = document.getElementById('due-date').valueAsDate;
+                let prioInput = document.querySelector('.task-priority').value;
+                let projSelected =  document.querySelector('.project-titles');
+                let projTitle = projSelected.options[projSelected.selectedIndex].text;
+                let projectID = projects.findProjIndexFromTitle(projTitle);
+                tasks.addTask(modalTitleInput, modalTaskDetail, dueDateInput, prioInput, projectID);
+                //dom.showAllTasks(0);
+            }
+            //Deletion of Task only after selecting the delete button in modal
+            if (target.classList.contains('modal-task-delete-button')){
+                tasks.removeTask(projectID,taskID);
+                dom.changeTasksList(selectedLink.getAttribute('data-link-index'));
+            }
+
 
             //SELECTING EDIT PROJECT ICON
             if (target.classList.contains('edit-project')){

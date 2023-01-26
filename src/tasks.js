@@ -5,22 +5,22 @@ const tasks = (() => {
     //array to track all the tasks in order to generate their ID
     let allTasksArray = []; 
     class Task {
-        constructor(title, details, dueDate, priority, projectIndex) {
+        constructor(title, details, dueDate, priority, projectID) {
             this.title = title;
             this.details = details;
             this.dueDate = dueDate; 
             this.priority = priority;
-            this.projectIndex = projectIndex;
+            this.projectID = projectID;
             //no taskID as input
-            this.taskID = getNextAvailTaskID();
-            let onlyTaskIDsArray = allTasksArray.map(obj => obj.taskID).sort();
-            this.previousID = onlyTaskIDsArray.slice(-1);
+            this.taskID = Task.getNextAvailTaskID();
+            //let onlyTaskIDsArray = allTasksArray.map(obj => obj.taskID).sort();
+            this.previousID = this.taskID-1;
 
         }
-        get taskID(){
+/*         get taskID(){
             return this._taskID
-        }
-        set taskID(newTaskID){
+        } */
+/*         set taskID(newTaskID){
             allTasksArray = getAllTasks();
             let onlyTaskIDsArray = allTasksArray.map(obj => obj.taskID).sort();
             if (!Number.isInteger(newTaskID) || onlyTaskIDsArray.find[newTaskID]) {
@@ -28,46 +28,49 @@ const tasks = (() => {
                 return null;
             } else {
                 console.log('taskID set to', newTaskID)
-                this._taskID = newTaskID;
+                this.taskID = newTaskID;
             }
-        }
-        set projectIndex(newProjectIndex) {
-            if (Number.isInteger(newProjectIndex)){
-                this._projectIndex = newProjectIndex;
+        } */
+/*         set projectID(newProjectID) {
+            if (Number.isInteger(newProjectID)){
+                this.projectID = newProjectID;
             } else {
-                console.error('could not set projectIndex property for this task because it is not a number!')
+                console.error('could not set projectID property for this task because it is not a number!')
+            }
+        } */
+        static getNextAvailTaskID(){
+            let allTasksArray = getAllTasks();
+            let onlyTaskIDsArray = allTasksArray.map(obj => obj.taskID).sort();
+            if (onlyTaskIDsArray.find[onlyTaskIDsArray.length-1]){
+                return null;
+            } else {
+                let nextAvailTaskID = onlyTaskIDsArray.length;
+                return nextAvailTaskID;
             }
         }
     }
-    function getNextAvailTaskID(){
-        allTasksArray = getAllTasks();
-        let onlyTaskIDsArray = allTasksArray.map(obj => obj.taskID).sort();
-        if (onlyTaskIDsArray.find[onlyTaskIDsArray.length-1]){
-            return null;
-        } else {
-            let nextAvailTaskID = onlyTaskIDsArray.length;
-            return nextAvailTaskID;
-        }
+
+    
+    function addTask(title, details, dueDate, priority, projectID){
+        let task = new Task(title, details, dueDate, priority, projectID);
+        projects.addTaskToProject(projectID, task);
+/*         let taskProjectsList = projects.getAllProjects();
+        let task = new Task(title, details, dueDate, priority, projectID);
+
+        taskProjectsList[projectID].taskArr.push(task);
+        localStorage.addToStorage(taskProjectsList); */
     }
-    function addTask(title, details, dueDate, priority, projectIndex){
-        let taskProjectsList = projects.getAllProjects();
-        let task = new Task(title, details, dueDate, priority, projectIndex);
-        //projects.projectsList = projects.getAllProjects();
-        
-        taskProjectsList[projectIndex].taskArr.push(task);
-        localStorage.addToStorage(taskProjectsList);
-    }
-    function removeTask(projectIndex,taskID){
+    function removeTask(projectID,taskID){
         let projectsFromStorage = projects.getAllProjects();
-        //get project from projectIndex
+        //get project from projectID
         //search its taskArr for the taskID
-        let taskToRemove = projectsFromStorage[projectIndex].taskArr.find(task => task.taskID === taskID)
+        let taskToRemove = projectsFromStorage[projectID].taskArr.find(task => task.taskID === taskID)
         console.log('found the task to remove' , taskToRemove);
-        let indexToRemove = projectsFromStorage[projectIndex].taskArr.indexOf(taskToRemove);
-        console.log('index of the task we want to remove',  projectsFromStorage[projectIndex].taskArr.indexOf(taskToRemove)) //
+        let indexToRemove = projectsFromStorage[projectID].taskArr.indexOf(taskToRemove);
+        console.log('index of the task we want to remove',  projectsFromStorage[projectID].taskArr.indexOf(taskToRemove)) //
         //remove it from that project
         if(indexToRemove > -1){
-            projectsFromStorage[projectIndex].taskArr.splice(indexToRemove,1);
+            projectsFromStorage[projectID].taskArr.splice(indexToRemove,1);
             localStorage.addToStorage(projectsFromStorage);
         } else {
             console.error('could not remove because indexToRemove = ', indexToRemove)
@@ -75,33 +78,30 @@ const tasks = (() => {
         //add the new project array without that task to localstorage
         
     }
-    function editTask(taskTitle, details, dueDate, priority, oldProjectIndex, newProjectIndex, taskID){
-
-        let taskProjectsList = projects.getAllProjects();
+    function editTask(taskTitle, details, dueDate, priority, oldProjectID, newProjectID, taskID){
+        let taskProjectsList = [];
+        taskProjectsList = projects.getAllProjects();
         //Need to come up with a solution to move tasks between projects and have them maintain their project-link-index/task-link-index
-        if( newProjectIndex === oldProjectIndex ){
+        if( newProjectID === oldProjectID){
             //if they same then task should be the same task and can edit other form fields
-            let foundTask = taskProjectsList[oldProjectIndex].taskArr.find(task => task.taskID === taskID);
+            let foundTask = taskProjectsList[oldProjectID].taskArr.find(task => task.taskID === taskID);
             foundTask.title = String(taskTitle);
             foundTask.details = String(details);
             foundTask.dueDate = new Date(dueDate);
             foundTask.priority = String(priority);
-            //old set statements taskProjectsList[oldProjectIndex].taskArr[taskID].title , .details ...etc
+            //old set statements taskProjectsList[oldProjectID].taskArr[taskID].title , .details ...etc
             localStorage.addToStorage(taskProjectsList);
-            //update project index in DOM - TODO
-        } else if(taskProjectsList[newProjectIndex].taskArr.find(obj => obj.taskID === taskID) === undefined){ 
+        } else if(taskProjectsList[newProjectID].taskArr.find(obj => obj.taskID === taskID) === undefined){ 
             //should evaluate true since the .find function returns an undefined if the taskID is not found
             //adds to the end new project, do before Removing! 
-            let taskToEdit = retrieveTask(oldProjectIndex,taskID);
+            let taskToEdit = retrieveTask(oldProjectID,taskID);
             //needs an AddTaskToProject with a setter
-            taskToEdit.projectIndex = newProjectIndex;
-            projects.addTaskToProject(newProjectIndex,taskToEdit)
+            taskToEdit.projectID = newProjectID;
+            projects.addTaskToProject(newProjectID,taskToEdit)
             //remove from old project -TODO
-            removeTask(oldProjectIndex,taskID)
+            removeTask(oldProjectID,taskID)
             //update the project and task indexes in the dom - TODO
         }
-        
-
     }
     function getAllTasks(){
         let projectsFromStorage = projects.getAllProjects();
@@ -119,7 +119,7 @@ const tasks = (() => {
         let taskArr = getAllTasks();
         let foundTask = {};
         foundTask = taskArr.find(function(task){
-            return parseInt(task.projectIndex,10) === dataProjectIndex && parseInt(task.taskID,10) === dataTaskIndex;
+            return parseInt(task.projectID,10) === dataProjectIndex && parseInt(task.taskID,10) === dataTaskIndex;
         })
         return foundTask;
     }
@@ -142,8 +142,7 @@ const tasks = (() => {
     /* console.log("I am getting all projects!:")
     console.table(projects.getAllProjects()); */
   
-    /* const task1 = addTask('first Task', 'this is my first todo', new Date('2/28/2023'), 'low',0);
-    console.table(task1); */
+
  /*    let taskToRemove = retrieveTask(0,0);
     console.log(taskToRemove);
     let arrayOfProjects = projects.getAllProjects();
@@ -164,7 +163,14 @@ const tasks = (() => {
 /*     console.log("arrayOfProjects's 1st Project'sTaskArr Array's length", arrayOfProjects[0].taskArr.length);
     console.log("arrayOfProjects's last task's index = ", arrayOfProjects[0].taskArr[2].taskID)
     console.log("this suggests that last task's ID should be 1 less than array.length") */
-    
+    //projects.findProjIndexFromTitle("Testing Project 1")
+    //const task3 = addTask('third Task', 'this is my third todo', new Date('2/28/2023'), 'low',0);
+    let projectsList= projects.getAllProjects()
+    console.log("prinnting new task array for project[0]:")
+        console.table(projectsList[0].taskArr)
+    //projects.addProject('2ndProject', 1);
+        console.log("prinnting new task array for project[1]:")
+        console.table(projectsList[1].taskArr)
     //localStorage.clearStorage()
     
     return {
