@@ -32,16 +32,19 @@ const projects = (() => {
                         details: 'random assortment of details',
                         dueDate: '2/28/2023',
                         priority: 'low',
+                        completed: false,
                         projectID: 0,
                         taskID: 0,
                         previousID: -1,
+                        
             
                     },
                     {
                         title: "test task 2 proj 1",
                         details: "random assortment of details",
                         dueDate: '12/16/2022',
-                        priority: 'low',
+                        priority: 'medium',
+                        completed: false,
                         projectID: 0,
                         taskID: 1, 
                         previousID: 0,
@@ -57,8 +60,10 @@ const projects = (() => {
                         details: "random assortment of details",
                         dueDate: '2/18/2023',
                         priority: 'high',
+                        completed: false,
                         projectID: 1,
                         taskID: 3,
+                        previousID: 2,
             
                     }
                 ],
@@ -79,10 +84,13 @@ const projects = (() => {
         localStorage.addToStorage(projectsList);
         //add a dom show projects or tasks
     }
-    function editProject(title,id,task){
-        let projectsFromStorage = JSON.parse(localStorage.getFromStorage('projects'));
-        projectsList = projectsFromStorage;
-        projectsList[id].title = title;
+    function editProject(title,projectID){
+        projectsList = getAllProjects();
+        let editProject = projectsList.find(proj => {
+            return parseInt(proj.id,10) === projectID;
+        })
+        let editProjectIndex = projectsList.indexOf(editProject)
+        projectsList[editProjectIndex].title = title;
         localStorage.addToStorage(projectsList);
     }
     function getAllProjects(){
@@ -105,7 +113,14 @@ const projects = (() => {
         console.log("prinnting new task array after adding the task to this project:")
         console.table(projectsList[projectIndex].taskArr)
     }
-    function findProjIndexFromTitle(projectTitle){
+    function retrieveProject(projectID){
+        let projArr = getAllProjects();
+        let foundProj = projArr.find(proj => {
+            return parseInt(proj.id,10) === projectID;
+        })
+        return foundProj;
+    }
+    function findProjIDFromTitle(projectTitle){
         projectsList = [];
         projectsList = getAllProjects();
         console.table(projectsList);
@@ -124,7 +139,8 @@ const projects = (() => {
         editProject,
         getAllProjects,
         addTaskToProject,
-        findProjIndexFromTitle
+        retrieveProject,
+        findProjIDFromTitle
     };
 })();
 

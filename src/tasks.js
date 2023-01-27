@@ -10,6 +10,7 @@ const tasks = (() => {
             this.details = details;
             this.dueDate = dueDate; 
             this.priority = priority;
+            this.completed = false;
             this.projectID = projectID;
             //no taskID as input
             this.taskID = Task.getNextAvailTaskID();
@@ -163,7 +164,7 @@ const tasks = (() => {
 /*     console.log("arrayOfProjects's 1st Project'sTaskArr Array's length", arrayOfProjects[0].taskArr.length);
     console.log("arrayOfProjects's last task's index = ", arrayOfProjects[0].taskArr[2].taskID)
     console.log("this suggests that last task's ID should be 1 less than array.length") */
-    //projects.findProjIndexFromTitle("Testing Project 1")
+    //projects.findProjIDFromTitle("Testing Project 1")
     //const task3 = addTask('third Task', 'this is my third todo', new Date('2/28/2023'), 'low',0);
     let projectsList= projects.getAllProjects()
     console.log("prinnting new task array for project[0]:")
@@ -171,6 +172,8 @@ const tasks = (() => {
     //projects.addProject('2ndProject', 1);
         console.log("prinnting new task array for project[1]:")
         console.table(projectsList[1].taskArr)
+        let projectLastIndex = projects.getAllProjects().length;
+        console.log(projectLastIndex);
     //localStorage.clearStorage()
     
     return {

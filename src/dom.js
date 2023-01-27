@@ -104,10 +104,62 @@ const dom = (() => {
                 //circle plus sign icon
                 const projectAddIcon = document.createElement('i');
                 projectAddIcon.classList.add('fa-solid','fa-circle-plus','add-project','hover-element','tooltip-icon');
+                //add Modal trigger
+                projectAddIcon.setAttribute('data-bs-toggle','modal');
+                projectAddIcon.setAttribute('data-bs-target','#project-modal');
+                    //add span for hover tooltip
                     const addProjectTooltip = document.createElement('span');
                     addProjectTooltip.classList.add('add-project', 'tooltip-text');
                     addProjectTooltip.textContent = 'Add a New Project';
                     projectAddIcon.appendChild(addProjectTooltip);
+                //create AddProject modal
+                const projectAddModal = document.createElement('div');
+                projectAddModal.classList.add('modal','modal-card','fade');
+                projectAddModal.setAttribute('id','project-modal');
+                  // create modal dialog nested under projectAddModal - for bootstrap
+                  const projectModalDialog = document.createElement('div');
+                  projectModalDialog.classList.add('modal-dialog', 'modal-dialog-centered');
+                    //create modal content nested under projectModalDialog - for boostrap
+                    const projectModalContent = document.createElement('div');
+                    projectModalContent.classList.add('modal-content');
+                    const projectModalContentForm = document.createElement('form');
+                    projectModalContentForm.setAttribute('id','form');
+                    projectModalContent.appendChild(projectModalContentForm);
+                    const projectModalHeader = document.createElement('div');
+                    projectModalHeader.classList.add('modal-header', 'project-modal-header');
+                        const projectModalH1 = document.createElement('h2');
+                        projectModalH1.textContent = 'Add Project';
+                        const projectModalH1CloseBtn = document.createElement('button');
+                        projectModalH1CloseBtn.classList.add('btn-close');
+                        projectModalH1CloseBtn.setAttribute('data-bs-dismiss','modal');
+                        projectModalH1CloseBtn.setAttribute('data-bs-target','#project-modal');
+                        projectModalHeader.appendChild(projectModalH1);
+                        projectModalHeader.appendChild(projectModalH1CloseBtn);
+                        projectModalContentForm.appendChild(projectModalHeader);
+                        const projectModalBody = document.createElement('div');
+                    projectModalBody.classList.add('modal-body');
+                    projectModalBody.innerHTML = `
+
+                    <!-- MODAL TITLE INPUT -->
+                    <div class="form-group">
+                      <label id="modal-title-label" for="project-modal-title">Title<span class="title-star">*</span></label>
+                      <input type="text" class="form-control" id="project-modal-title" name="project-modal-title" required>
+                      <!--<p class="modal-title-error hide">Please fill out this field.</p> -->
+                    </div>
+                      `
+                      projectModalContentForm.appendChild(projectModalBody);
+                    const projectModalFooter = document.createElement('div');
+                    projectModalFooter.classList.add('modal-footer','modal-buttons');
+                    projectModalFooter.innerHTML = `
+                            <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary modal-project-button" data-bs-dismiss="modal">Add</button> 
+                            `
+                    projectModalContentForm.appendChild(projectModalFooter);
+
+                //append content to dialog and dialog to projectModal
+                projectModalDialog.appendChild(projectModalContent);
+                projectAddModal.appendChild(projectModalDialog);
+            projectLinksTitleDiv.appendChild(projectAddModal)
             projectLinksTitleDiv.appendChild(projectsTitle);
             projectLinksTitleDiv.appendChild(projectAddIcon);
         projectNavDiv.appendChild(projectLinksTitleDiv);
@@ -420,7 +472,9 @@ const dom = (() => {
                 generateTasksDom(currentTasksList);
                 break;
             case 3:
-                currentTasksList = tasksList
+                currentTasksList = tasksList.filter(task => {
+                  return task.completed === true;
+                })
                 console.log('tasklist: ');
                 console.table(tasksList);
                 console.log('CurrentTaskslist: ');
@@ -469,7 +523,7 @@ const dom = (() => {
             } else if (currentTasksList[i].priority === 'high') {
             taskIcon.classList.add('high-priority');
             } else {
-            taskIcon.classList.add('fal', 'padding-right');
+            taskIcon.classList.add('fa-light', 'fa-circle','padding-right');
             } 
             taskIcon.setAttribute('data-project-index', currentTasksList[i].projectID);
             taskIcon.setAttribute('data-task-id', currentTasksList[i].taskID);
@@ -517,18 +571,18 @@ const dom = (() => {
             taskTrashIcon.setAttribute('data-bs-toggle','modal');
             taskTrashIcon.setAttribute('data-bs-target','#delete-task-modal');
               //create DeleteTaskConfirm modal
-        const taskDeleteModal = document.createElement('div');
-        taskDeleteModal.classList.add('modal','modal-card','fade');
-        taskDeleteModal.setAttribute('id','delete-task-modal');
-            // create modal dialog nested under taskDeleteModal - for bootstrap
-            const taskDeleteModalDialog = document.createElement('div');
-            taskDeleteModalDialog.classList.add('modal-dialog', 'modal-dialog-centered');
-            //create modal content nested under taskModalDialog - for boostrap
-            const taskDeleteModalContent = document.createElement('div');
-            taskDeleteModalContent.classList.add('modal-content');
-            //create deletion modal header
-            const taskDeleteModalHeader = document.createElement('div');
-            taskDeleteModalHeader.classList.add('modal-header','delete-task-header');
+            const taskDeleteModal = document.createElement('div');
+            taskDeleteModal.classList.add('modal','modal-card','fade');
+            taskDeleteModal.setAttribute('id','delete-task-modal');
+                // create modal dialog nested under taskDeleteModal - for bootstrap
+                const taskDeleteModalDialog = document.createElement('div');
+                taskDeleteModalDialog.classList.add('modal-dialog', 'modal-dialog-centered');
+                //create modal content nested under taskModalDialog - for boostrap
+                const taskDeleteModalContent = document.createElement('div');
+                taskDeleteModalContent.classList.add('modal-content');
+                //create deletion modal header
+                const taskDeleteModalHeader = document.createElement('div');
+                taskDeleteModalHeader.classList.add('modal-header','delete-task-header');
                         const taskDeleteModalH1 = document.createElement('h2');
                         taskDeleteModalH1.textContent = 'Delete Task';
                         const taskDeleteModalH1CloseBtn = document.createElement('button');
@@ -578,9 +632,24 @@ const dom = (() => {
             taskDiv.appendChild(taskInfo);
             taskDiv.appendChild(taskDeleteModal);
             tasksListDiv.appendChild(taskDiv);
-
+            //Task Complete Icons
+            if (currentTasksList[i].completed === false) {
+              taskText.classList.remove('task-done-text');
+              taskIcon.classList.add(
+                'fa-regular',
+                'fa-circle',
+                'padding-right'
+              );
+            } else {
+              taskText.classList.add('task-done-text');
+              taskIcon.classList.add(
+                'fa-solid',
+                'fa-check-circle',
+                'padding-right'
+              );
+            }
+          }
         }
-    }
     function showAllProjects(){
       let projectsArr = projects.getAllProjects();
       generateProjectsLinks(projectsArr);
@@ -638,6 +707,8 @@ const dom = (() => {
           'padding-right'
         );
         projectEditIcon.setAttribute('data-link-index', i+4);
+        projectEditIcon.setAttribute('data-bs-toggle','modal');
+        projectEditIcon.setAttribute('data-bs-target','#project-modal');
 
         projectTrashIcon.classList.add(
           'fa-solid',
@@ -670,7 +741,19 @@ const dom = (() => {
       let selectedProject = document.querySelector('.project-titles');
       selectedProject.value = projectID;
       //selectedProject.setAttribute('selected');
-      
+    }
+    function toggleTaskCompletion(projectID, taskID, selectedLinkIndex){
+      let dataLinkIndex = selectedLinkIndex;
+      let projectsList = projects.getAllProjects();
+      let taskObj = projectsList[projectID].taskArr.find(x => x.taskID === taskID)
+      let taskIndex = projectsList[projectID].taskArr.indexOf(taskObj);
+      if(projectsList[projectID].taskArr[taskIndex].completed === false){
+        projectsList[projectID].taskArr[taskIndex].completed = true;
+      } else {
+        projectsList[projectID].taskArr[taskIndex].completed = false;
+      }
+      localStorage.addToStorage(projectsList);
+      showAllTasks(dataLinkIndex);
     }
     
     return {
@@ -680,7 +763,8 @@ const dom = (() => {
         showAllTasks,
         changeTasksList,
         showAllProjects,
-        selectProjectForTaskModal
+        selectProjectForTaskModal,
+        toggleTaskCompletion
     }
 })();
 

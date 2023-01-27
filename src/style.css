@@ -7,6 +7,10 @@
     --light-gray: #e5e5e5;
     --grey: #E6E6E6;
     --red: rgb(138, 8, 8);
+    --bright-red: rgb(233, 9, 9);
+    --bright-green:rgb(36, 243, 9);
+    --calm-green: rgb(94, 212, 78);
+    --bright-yellow: rgb(196, 199, 9);
     --header-background-color:rgb(9, 61, 107);
     --light-font-color: rgb(238, 238, 238);
     --sidebar-background-color:rgb(14, 100, 100, .8);
@@ -310,13 +314,19 @@ main{
   transform: scale(1.1);
 }
 .low-priority {
-  color: var(--green);
+  color: var(--calm-green);
+  margin-top: 5px;
+  margin-bottom: 1rem;
 }
 .mid-priority {
-  color: var(--yellow);
+  color: var(--bright-yellow);
+  margin-top: 5px;
+  margin-bottom: 1rem;
 }
 .high-priority {
-  color: var(--red);
+  color: var(--bright-red);
+  margin-top: 5px;
+  margin-bottom: 1rem;
 }
 .task-done-text {
   text-decoration-line: line-through;
