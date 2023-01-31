@@ -1,6 +1,6 @@
 import dom from './dom';
 import tasks from './tasks.js';
-import projects from './projects.js'
+import projects from './projects.js';
 import {format, endOfDay, endOfWeek} from 'date-fns'
 
 const handlers = (() => {
