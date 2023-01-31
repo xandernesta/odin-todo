@@ -35,14 +35,14 @@ module.exports = {
     module: {
         rules: [
             {
-            test: /\.css$/,
+            test: /\.css$/i,
             use: [{
               // inject CSS to page
               loader: 'style-loader'
             }, {
               // translates CSS into CommonJS modules
               loader: 'css-loader'
-            }]
+            }],
             /* removed because I don't think I imported scss properly and dont really want to use it yet for this project
             , {
               // Run postcss actions
@@ -66,8 +66,8 @@ module.exports = {
               // compiles Sass to CSS
               loader: 'sass-loader'
             }] */
-            }
-        ]
+            },
+        ],
     },
     optimization: {
         runtimeChunk: 'single',
