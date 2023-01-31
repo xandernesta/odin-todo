@@ -6,12 +6,12 @@ module.exports = {
     mode: 'development',
     entry: {
       index: './src/index.js',
-      dom: './dom.js';
-      listeners: './listeners.js',
-      projects: './projects.js',
-      tasks: './tasks.js',
-      localstorage: './localstorage.js'
-    }
+      dom: './src/dom.js',
+      listeners: './src/listeners.js',
+      projects: './src/projects.js',
+      tasks: './src/tasks.js',
+      localstorage: './src/localstorage.js'
+      },
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist'),
