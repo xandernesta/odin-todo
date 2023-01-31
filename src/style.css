@@ -413,37 +413,47 @@ main{
 .cancel-modal{
   border-color: #ced4da !important;
 }
-.modal-task-button{
+.modal-task-button,
+.modal-project-button{
   background-color: var(--aqua) !important;
   border-color: var(--dark-aqua) !important;
 }
-.modal-task-button:hover{
+.modal-task-button:hover,
+.modal-project-button:hover{
   background-color: var(--header-background-color) !important;
   border-color: var(--header-background-color) !important;
 }
-.modal-header.delete-task-header{
+.modal-header.delete-task-header,
+.modal-header.delete-project-header{
   background: var(--red) !important;
 }
-#delete-task-modal .btn-close{
+#delete-task-modal .btn-close,
+#delete-project-modal .btn-close{
   color:white;
 }
-#delete-task-modal.modal-body{
+#delete-task-modal.modal-body, 
+#delete-project-modal.modal-body{
   padding-bottom: .25rem;
 }
-.modal-body .delete-task-body-text{
+.modal-body .delete-task-body-text,
+.modal-body .delete-project-body-text{
   font-size: 1.25rem;
   margin: 0;
   padding-bottom: 0;
+  color: var(--dark-font-color);
 }
-.task-to-delete-title{
+.task-to-delete-title, 
+.project-to-delete-title{
   font-size:1.5rem;
   font-weight: 600;
 }
-.modal-task-delete-button{
+.modal-task-delete-button,
+.modal-project-delete-button {
   background-color: var(--red) !important;
   border-color: var(--red) !important;
 }
-#delete-task-modal .modal-footer{
+#delete-task-modal .modal-footer,
+#delete-project-modal .modal-footer{
   margin: 0px 16px 0px 16px;
   padding: 8px 12px 8px 12px;
 }

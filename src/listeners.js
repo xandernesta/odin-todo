@@ -15,7 +15,8 @@ const handlers = (() => {
             let {target} = event;
             const modalMainTitle = document.querySelector('.modal-main-title');
             const taskModal = document.querySelector('#task-modal');
-            const form = document.querySelector('#form');
+            const taskForm = document.querySelector('.task-form');
+            const projectForm = document.querySelector('.project-form');
             let selectedLink = document.querySelector('.selected-link');
             let linkIndex = parseInt(target.getAttribute('data-link-index'), 10);
             //Adds selected class for styling and changing page Title
@@ -27,11 +28,13 @@ const handlers = (() => {
             //Click to reset form on click on add-task icon
             if(target.classList.contains('add-task')){
                 //selects the .modal-header div and then the firstChild of that div which is the h2 that I want to change to Add Task
-                let modalH2 = document.querySelector('.modal-header').firstChild;
+                let modalH2 = taskForm.querySelector('.modal-header').firstChild;
                 modalH2.textContent = "Add Task";
                 let modalTaskButton = document.querySelector('.modal-task-button');
                 modalTaskButton.textContent = "Add";
-                form.reset();
+                modalTaskButton.classList.remove('edit-submit');
+                taskForm.reset();
+                //dom.populateModalProjectTitles(projects.getAllProjects());
             }
             //Clicks in Modal on task icon for each task-div
             if (target.classList.contains('task-icon')) {
@@ -39,8 +42,6 @@ const handlers = (() => {
                 taskID = parseInt(target.getAttribute('data-task-id'),10);
                 
                 if (target.classList.contains('edit-task')){
-                    
-                    console.log("retrieved task:", JSON.stringify(tasks.retrieveTask(projectID,taskID)))
                     let {title,details,dueDate,priority} = tasks.retrieveTask(projectID,taskID);
                     //selects the .modal-header div and then the firstChild of that div which is the h2 that I want to change to Edit Task
                     let modalH2 = taskModal.querySelector('.modal-header').firstChild;
@@ -61,6 +62,7 @@ const handlers = (() => {
 
                     //DISPLAYS THE PROJECT THE SELECTED TASK BELONGS TO
                     dom.selectProjectForTaskModal(projectID);
+
                 }
                 if (target.classList.contains('delete-task')){
                     projectID = parseInt(target.getAttribute('data-project-index'),10);
@@ -68,10 +70,12 @@ const handlers = (() => {
                     let taskToDeleteTitle = document.querySelector('.task-to-delete-title');
                     let {title} = tasks.retrieveTask(projectID,taskID);
                     taskToDeleteTitle.textContent = ` "${title}"`;
-                    /*  */
-
                 }
-            
+            }
+            //IF CANCEL BUTTON IS CLICKED
+            if(target.classList.contains('btn-close')||target.getAttribute('type') === "btn-close"){
+                let modalTaskButton = document.querySelector('.modal-task-button');
+                modalTaskButton.classList.remove('edit-submit');
             }
             //SUBMITTING EDITED TASK
             if (target.classList.contains('edit-submit')){
@@ -80,17 +84,7 @@ const handlers = (() => {
                 let dueDateInput = document.getElementById('due-date');
                 let prioInput = document.querySelector('.task-priority');
                 let projectSelector = document.querySelector('.project-titles');
-
-                console.log("here is the task before edit:")
-                console.table(tasks.retrieveTask(projectID,taskID))
-                console.log(`here is modalTitleInput ${modalTitleInput.value}`);
-                console.log(`here is projectInput ${modalTaskDetail.value}`)
-                console.log(`here is projectInput ${projectID}`);
-                console.log(`here is prirority Input ${prioInput.value}`);
-                console.log(`here is taskInput ${taskID}`);
                 tasks.editTask(String(modalTitleInput.value), String(modalTaskDetail.value), dueDateInput.valueAsDate, prioInput.value, parseInt(projectID), parseInt(projectSelector.value), parseInt(taskID));
-                //dom.showAllTasks(selectedLink);
-                //dom.selectLink(target, linkIndex)
             }
             // Click to Add task in Add-Task-Modal
             if (target.classList.contains('modal-task-button') && !target.classList.contains('edit-submit')){
@@ -102,12 +96,21 @@ const handlers = (() => {
                 let projTitle = projSelected.options[projSelected.selectedIndex].text;
                 let projectID = projects.findProjIDFromTitle(projTitle);
                 tasks.addTask(modalTitleInput, modalTaskDetail, dueDateInput, prioInput, projectID);
-                //dom.showAllTasks(0);
             }
             //Deletion of Task only after selecting the delete button in modal
             if (target.classList.contains('modal-task-delete-button')){
                 tasks.removeTask(projectID,taskID);
                 dom.changeTasksList(selectedLink.getAttribute('data-link-index'));
+            }
+            // CLICK CIRCLE TO MARK TASK AS COMPLETED
+            if (target.classList.contains('task-div') ||
+            target.classList.contains('fa-circle') ||
+            target.classList.contains('fa-check-circle') ||
+            target.classList.contains('task-text')
+            ) {
+            projectID = parseInt(target.getAttribute('data-project-index'), 10);
+            taskID = parseInt(target.getAttribute('data-task-id'), 10);
+            dom.toggleTaskCompletion(projectID, taskID, selectedLink.getAttribute('data-link-index'));
             }
 
             //PROJECT LISTENERS
@@ -122,7 +125,7 @@ const handlers = (() => {
                     projModalH2.textContent = "Add Project";
                     let modalProjectButton = projectModal.querySelector('.modal-project-button');
                     modalProjectButton.textContent = "Add";
-                    form.reset();
+                    projectForm.reset();
                 }
                 //SELECTING EDIT PROJECT ICON
                 if (target.classList.contains('edit-project')){
@@ -130,7 +133,6 @@ const handlers = (() => {
                     let linkIndex = parseInt(projectIconParent.getAttribute('data-link-index'), 10);
                     dom.selectLink(target, linkIndex, 'edit') 
                     let projectID = linkIndex-4;
-                    console.log("retrieved project:", JSON.stringify(projects.retrieveProject(projectID)))
                     let {title} = projects.retrieveProject(projectID);
                     //selects the .modal-header div and then the firstChild of that div which is the h2 that I want to change to Edit Task
                     let projModalTitleInput = document.getElementById('project-modal-title');
@@ -142,48 +144,49 @@ const handlers = (() => {
                     let modalProjectButton = document.querySelector('.modal-project-button');
                     modalProjectButton.textContent = "Edit";
                     modalProjectButton.classList.add('edit-project-submit');
-
-
+                }
+                if (target.classList.contains('delete-project')){
+                    let linkIndex = parseInt(target.getAttribute('data-link-index'),10);
+                    let projectID = parseInt(linkIndex,10)-4
+                    //taskID = parseInt(target.getAttribute('data-task-id'),10);
+                    let projectToDeleteTitle = document.querySelector('.project-to-delete-title');
+                    let {title} = projects.retrieveProject(projectID);
+                    projectToDeleteTitle.textContent = ` "${title}"`;
                 }
             }
-            // Click to Add task in Add-Task-Modal
+            // Click to Add task in Add-Project-Modal
             if (target.classList.contains('modal-project-button') && !target.classList.contains('edit-project-submit') && !target.classList.contains('edit-submit')){
                 let modalTitleInput = document.getElementById('project-modal-title').value;
                 let projectIndexLength = projects.getAllProjects().length;
                 let nextProjectID = projectIndexLength;
                 projects.addProject(modalTitleInput, nextProjectID);
+                dom.showAllProjects();
             }
-
-            //SUBMITTING EDITED TASK
+            //SUBMITTING EDITED PROJECT
             if (target.classList.contains('edit-project-submit')){
                 let projectModal = document.getElementById('project-modal');
                 let modalTitleInput = projectModal.querySelector('#project-modal-title');
                 let projectID = parseInt(selectedLink.getAttribute('data-link-index'),10)-4;
 
-                console.log("here is the project before edit:")
-                console.table(projects.retrieveProject(projectID))
                 projects.editProject(String(modalTitleInput.value), parseInt(projectID));
                 dom.showAllProjects()
             }
-            
-            // CLICK CIRCLE TO MARK TASK AS COMPLETED
-            if (target.classList.contains('task-div') ||
-            target.classList.contains('fa-circle') ||
-            target.classList.contains('fa-check-circle') ||
-            target.classList.contains('task-text')
-            ) {
-            projectID = parseInt(target.getAttribute('data-project-index'), 10);
-            taskID = parseInt(target.getAttribute('data-task-id'), 10);
-            dom.toggleTaskCompletion(projectID, taskID, selectedLink.getAttribute('data-link-index'));
+            //Deletion of project only after selecting the delete button in modal
+            if (target.classList.contains('modal-project-delete-button')){
+                let projectID = parseInt(selectedLink.getAttribute('data-link-index'),10)-4
+                projects.removeProject(projectID);
+                dom.showAllProjects();
+                let newTarget = document.querySelector('.link[data-link-index="0"]')
+                dom.selectLink(newTarget,0)
+                dom.showMainTitle(0); //toggles the All tasks link and shows all tasks in storage
+                dom.showAllTasks(0);
             }
         });
-
     }
 
     return {
         listenClicks
-/*         handleTaskIconClick,
-        */
+
     };
 })();
 

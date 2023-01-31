@@ -1,6 +1,6 @@
 import projects from './projects.js'
 import tasks from './tasks.js'
-import {format, endOfDay, endOfWeek} from 'date-fns'
+import {format, endOfDay, endOfWeek, startOfWeek} from 'date-fns'
 import localStorage from './localstorage.js'
 
 //DOM elements
@@ -124,6 +124,7 @@ const dom = (() => {
                     projectModalContent.classList.add('modal-content');
                     const projectModalContentForm = document.createElement('form');
                     projectModalContentForm.setAttribute('id','form');
+                    projectModalContentForm.classList.add('project-form');
                     projectModalContent.appendChild(projectModalContentForm);
                     const projectModalHeader = document.createElement('div');
                     projectModalHeader.classList.add('modal-header', 'project-modal-header');
@@ -151,7 +152,7 @@ const dom = (() => {
                     const projectModalFooter = document.createElement('div');
                     projectModalFooter.classList.add('modal-footer','modal-buttons');
                     projectModalFooter.innerHTML = `
-                            <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal">Cancel</button>
+                            <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                             <button type="submit" class="btn btn-primary modal-project-button" data-bs-dismiss="modal">Add</button> 
                             `
                     projectModalContentForm.appendChild(projectModalFooter);
@@ -201,7 +202,13 @@ const dom = (() => {
         mainTasksDiv.appendChild(tasksTitleDiv);
         //circle plus sign icon- Add task button
         const taskAddIcon = document.createElement('i');
-        taskAddIcon.classList.add('fa-solid','fa-circle-plus','add-task','hover-element','tooltip-icon');
+        taskAddIcon.classList.add(
+          'fa-solid',
+          'fa-circle-plus',
+          'add-task',
+          'hover-element',
+          'tooltip-icon'
+        );
         taskAddIcon.setAttribute('data-bs-toggle','modal');
         taskAddIcon.setAttribute('data-bs-target','#task-modal');
             const addTaskTooltip = document.createElement('span');
@@ -221,6 +228,7 @@ const dom = (() => {
                 taskModalContent.classList.add('modal-content');
                 const taskModalContentForm = document.createElement('form');
                 taskModalContentForm.setAttribute('id','form');
+                taskModalContentForm.classList.add('task-form');
                 // taskModalContentForm.setAttribute('novalidate','');
                 taskModalContent.appendChild(taskModalContentForm);
                     const taskModalHeader = document.createElement('div');
@@ -238,56 +246,56 @@ const dom = (() => {
                     taskModalBody.classList.add('modal-body');
                     taskModalBody.innerHTML = `
 
-                    <!-- MODAL TITLE INPUT -->
-                    <div class="form-group">
-                      <label id="modal-title-label" for="modal-title">Title<span class="title-star">*</span></label>
-                      <input type="text" class="form-control" id="modal-title" name="modal-title" required>
-                      <!--<p class="modal-title-error hide">Please fill out this field.</p> -->
-                    </div>
-          
-                    <!-- MODAL CONTENT FOR A TASK -->
-                    
-          
-                      <!-- TASK DESCRIPTION -->
-                      <div class="form-group">
-                        <label for="task-details">Details</label>
-                        <textarea class="task-details form-control" rows="3" cols="36"></textarea>
-                      </div>
-          
-                      <!-- TASK DUE DATE -->
-                      <div class="form-group">
-                        <label for="dueDate">Due Date</label>
-                        <input type="date" class="form-control" id="due-date" name="dueDate" required>
-                      </div>
-          
-                      <!-- TASK PRIORITY -->
-                      <div class="form-group">
-                        <label for="priority">Priority</label>
-                        <select class="task-priority form-select" name="priority" required>
-                          <option value="" disabled="" selected="">Task's priority?</option>
-                          <option value="low">😴 Low</option>
-                          <option value="medium">😅 Medium</option>
-                          <option value="high">😲 High</option>
-                        </select>
-                      </div>
+                                  <!-- MODAL TITLE INPUT -->
+                                  <div class="form-group">
+                                    <label id="modal-title-label" for="modal-title">Title<span class="title-star">*</span></label>
+                                    <input type="text" class="form-control" id="modal-title" name="modal-title" required>
+                                    <!--<p class="modal-title-error hide">Please fill out this field.</p> -->
+                                  </div>
+                        
+                                  <!-- MODAL CONTENT FOR A TASK -->
+                                  
+                        
+                                    <!-- TASK DESCRIPTION -->
+                                    <div class="form-group">
+                                      <label for="task-details">Details</label>
+                                      <textarea class="task-details form-control" rows="3" cols="36"></textarea>
+                                    </div>
+                        
+                                    <!-- TASK DUE DATE -->
+                                    <div class="form-group">
+                                      <label for="dueDate">Due Date</label>
+                                      <input type="date" class="form-control" id="due-date" name="dueDate" required>
+                                    </div>
+                        
+                                    <!-- TASK PRIORITY -->
+                                    <div class="form-group">
+                                      <label for="priority">Priority</label>
+                                      <select class="task-priority form-select" name="priority" required>
+                                        <option value="" disabled="" selected="">Task's priority?</option>
+                                        <option value="low">😴 Low</option>
+                                        <option value="medium">😅 Medium</option>
+                                        <option value="high">😲 High</option>
+                                      </select>
+                                    </div>
 
-                      <!-- PROJECTS LIST -->
-                      <div class="form-group">
-                      <label for="projects">Projects</label>
-                      <select class="project-titles form-select" name="projects" required>
-                        <option value="" disabled="" selected="">Projects</option>
-                       <!-- <option value=""></option>  -->
-                      </select>
-                    </div>
+                                    <!-- PROJECTS LIST -->
+                                    <div class="form-group">
+                                    <label for="projects">Projects</label>
+                                    <select class="project-titles form-select" name="projects" required>
+                                      <option value="" disabled="" selected="">Projects</option>
+                                    <!-- <option value=""></option>  -->
+                                    </select>
+                                  </div>
 
-                  `
+                                `;
                     taskModalContentForm.appendChild(taskModalBody);
                     const taskModalFooter = document.createElement('div');
                     taskModalFooter.classList.add('modal-footer','modal-buttons');
                     taskModalFooter.innerHTML = `
-                            <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal">Cancel</button>
+                            <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                             <button type="submit" class="btn btn-primary modal-task-button" data-bs-dismiss="modal">Add</button> 
-                            `
+                            `;
                     taskModalContentForm.appendChild(taskModalFooter);
 
                 //append content to dialog and dialog to taskModal
@@ -425,7 +433,6 @@ const dom = (() => {
         let dataLinkIndex = index;
         projectsList = projects.getAllProjects();
         let title = projectsList[index-4].title;
-        console.table(projectsList)
         mainTitleText.textContent = title;
       }
     }
@@ -448,37 +455,29 @@ const dom = (() => {
                 generateTasksDom(currentTasksList);
                 break;
             case 1:
-                currentTasksList = tasksList.filter(task => {
+                let todayTasksList = tasksList.filter(task => {
                 const dateDue = new Date(task.dueDate);
                 return dateDue <= endOfDay(today)
                 });
-                console.log(`${endOfDay(today)}`);
-                console.log('Today tasklist: ');
-                console.log(tasksList);
-                console.log('Today CurrentTaskslist: ');
-                console.table(currentTasksList);
+                currentTasksList = todayTasksList.filter(task =>{
+                  return task.completed === false;
+                })
                 generateTasksDom(currentTasksList);
                 break;
             case 2:
-                currentTasksList = tasksList.filter(task =>  {               
+                let weekTasksList = tasksList.filter(task =>  {               
                 const dateDue = new Date(task.dueDate);
-                return dateDue <= endOfWeek(today)
-                    
+                return dateDue <= endOfWeek(today) && dateDue >= startOfWeek(today);
                 });
-                console.log('tasklist: ');
-                console.table(tasksList);
-                console.log('currentTasksList: ');
-                console.table(currentTasksList);
+                currentTasksList = weekTasksList.filter(task =>{
+                  return task.completed === false;
+                });
                 generateTasksDom(currentTasksList);
                 break;
             case 3:
                 currentTasksList = tasksList.filter(task => {
                   return task.completed === true;
                 })
-                console.log('tasklist: ');
-                console.table(tasksList);
-                console.log('CurrentTaskslist: ');
-                console.table(currentTasksList);
                 generateTasksDom(currentTasksList);
                 break;
 
@@ -583,42 +582,32 @@ const dom = (() => {
                 //create deletion modal header
                 const taskDeleteModalHeader = document.createElement('div');
                 taskDeleteModalHeader.classList.add('modal-header','delete-task-header');
-                        const taskDeleteModalH1 = document.createElement('h2');
-                        taskDeleteModalH1.textContent = 'Delete Task';
-                        const taskDeleteModalH1CloseBtn = document.createElement('button');
-                        taskDeleteModalH1CloseBtn.classList.add('btn-close', 'btn-close-white');
-                        taskDeleteModalH1CloseBtn.setAttribute('data-bs-dismiss','modal');
-                        taskDeleteModalH1CloseBtn.setAttribute('data-bs-target','#delete-task-modal');
+                  const taskDeleteModalH1 = document.createElement('h2');
+                  taskDeleteModalH1.textContent = 'Delete Task';
+                  const taskDeleteModalH1CloseBtn = document.createElement('button');
+                  taskDeleteModalH1CloseBtn.classList.add('btn-close', 'btn-close-white');
+                  taskDeleteModalH1CloseBtn.setAttribute('data-bs-dismiss','modal');
+                  taskDeleteModalH1CloseBtn.setAttribute('data-bs-target','#delete-task-modal');
             taskDeleteModalHeader.appendChild(taskDeleteModalH1);
             taskDeleteModalHeader.appendChild(taskDeleteModalH1CloseBtn);
             taskDeleteModalContent.appendChild(taskDeleteModalHeader);
-            const taskDeleteModalBody = document.createElement('div');
-            taskDeleteModalBody.classList.add('modal-body');
-            taskDeleteModalBody.innerHTML = `
-            <p class="delete-task-body-text">Are you sure?<br>
-            Task <span class="task-to-delete-title">Task 1</span> will be gone forever!</p>
-            `
+              const taskDeleteModalBody = document.createElement('div');
+              taskDeleteModalBody.classList.add('modal-body');
+              taskDeleteModalBody.innerHTML = `
+                        <p class="delete-task-body-text">Are you sure?<br>
+                        Task <span class="task-to-delete-title">Task 1</span> will be gone forever!</p>
+                        `;
             taskDeleteModalContent.appendChild(taskDeleteModalBody);
-            const taskDeleteModalFooter = document.createElement('div'); 
-            taskDeleteModalFooter.classList.add('modal-footer','modal-buttons');
-            taskDeleteModalFooter.innerHTML = `
-            <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary modal-task-delete-button" data-bs-dismiss="modal">Delete</button> 
-            `
+              const taskDeleteModalFooter = document.createElement('div'); 
+              taskDeleteModalFooter.classList.add('modal-footer','modal-buttons');
+              taskDeleteModalFooter.innerHTML = `
+                        <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button type="submit" class="btn btn-primary modal-task-delete-button" data-bs-dismiss="modal">Delete</button> 
+                        `;
             taskDeleteModalContent.appendChild(taskDeleteModalFooter);
             //append content to dialog and dialog to taskDeleteModal
             taskDeleteModalDialog.appendChild(taskDeleteModalContent);
             taskDeleteModal.appendChild(taskDeleteModalDialog);
-            
-            // TASK INFO ICON - not I want 
-/*             taskInfoIcon.classList.add(
-                'fa-solid',
-                'task-icon',
-                'scale-element',
-                'fa-circle-info'
-            );
-            taskInfoIcon.setAttribute('data-project-index', currentTasksList[i].projectID);
-            taskInfoIcon.setAttribute('data-task-id', currentTasksList[i].taskID); */
 
                 // APPENDS
             taskIconAndTextDiv.appendChild(taskIcon);
@@ -626,8 +615,6 @@ const dom = (() => {
             taskInfo.appendChild(taskDate);
             taskInfo.appendChild(taskEditIcon);
             taskInfo.appendChild(taskTrashIcon);
-            //not sure I want
-            //taskInfo.appendChild(taskInfoIcon);
             taskDiv.appendChild(taskIconAndTextDiv);
             taskDiv.appendChild(taskInfo);
             taskDiv.appendChild(taskDeleteModal);
@@ -659,7 +646,7 @@ const dom = (() => {
       const projectsCount = document.querySelector('.projects-count');
       let projectsLinksDiv = document.querySelector('.project-links-div');
 
-      projectsCount.textContent = projectsArr.length;
+      projectsCount.textContent = `(${projectsArr.length})`;
       projectsLinksDiv.textContent = '';
 
       for (let i = 0; i < projectsArr.length; i++){
@@ -709,7 +696,7 @@ const dom = (() => {
         projectEditIcon.setAttribute('data-link-index', i+4);
         projectEditIcon.setAttribute('data-bs-toggle','modal');
         projectEditIcon.setAttribute('data-bs-target','#project-modal');
-
+        //PROJECT DELETE ICON
         projectTrashIcon.classList.add(
           'fa-solid',
           'fa-trash-can',
@@ -720,7 +707,47 @@ const dom = (() => {
           'scale-element'
         );
         projectTrashIcon.setAttribute('data-link-index', i+4);
-
+        projectTrashIcon.setAttribute('data-bs-toggle','modal');
+        projectTrashIcon.setAttribute('data-bs-target','#delete-project-modal');
+        //CREATE DeleteProjectConfirm MODAL
+        const projectDeleteModal = document.createElement('div');
+        projectDeleteModal.classList.add('modal','modal-card','fade');
+        projectDeleteModal.setAttribute('id','delete-project-modal');
+        // create modal dialog nested under projectDeleteModal - for bootstrap
+                const projectDeleteModalDialog = document.createElement('div');
+                projectDeleteModalDialog.classList.add('modal-dialog', 'modal-dialog-centered');
+                //create modal content nested under projectModalDialog - for boostrap
+                const projectDeleteModalContent = document.createElement('div');
+                projectDeleteModalContent.classList.add('modal-content');
+                //create deletion modal header
+                const projectDeleteModalHeader = document.createElement('div');
+                projectDeleteModalHeader.classList.add('modal-header','delete-project-header');
+                  const projectDeleteModalH1 = document.createElement('h2');
+                  projectDeleteModalH1.textContent = 'Delete Project';
+                  const projectDeleteModalH1CloseBtn = document.createElement('button');
+                  projectDeleteModalH1CloseBtn.classList.add('btn-close', 'btn-close-white');
+                  projectDeleteModalH1CloseBtn.setAttribute('data-bs-dismiss','modal');
+                  projectDeleteModalH1CloseBtn.setAttribute('data-bs-target','#delete-project-modal');
+                projectDeleteModalHeader.appendChild(projectDeleteModalH1);
+                projectDeleteModalHeader.appendChild(projectDeleteModalH1CloseBtn);
+                projectDeleteModalContent.appendChild(projectDeleteModalHeader);
+                  const projectDeleteModalBody = document.createElement('div');
+                  projectDeleteModalBody.classList.add('modal-body');
+                  projectDeleteModalBody.innerHTML = `
+                          <p class="delete-project-body-text">Are you sure?<br>
+                          Project <span class="project-to-delete-title">project 1</span> and all it's associated <strong>tasks</strong> will be gone forever!</p>
+                          `;
+                projectDeleteModalContent.appendChild(projectDeleteModalBody);
+                  const projectDeleteModalFooter = document.createElement('div'); 
+                  projectDeleteModalFooter.classList.add('modal-footer','modal-buttons');
+                  projectDeleteModalFooter.innerHTML = `
+                          <button type="btn-close" class="btn btn-light cancel-modal" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                          <button type="submit" class="btn btn-primary modal-project-delete-button" data-bs-dismiss="modal">Delete</button> 
+                          `;
+                projectDeleteModalContent.appendChild(projectDeleteModalFooter);
+                //append content to dialog and dialog to projectDeleteModal
+                projectDeleteModalDialog.appendChild(projectDeleteModalContent);
+                projectDeleteModal.appendChild(projectDeleteModalDialog);
         // APPENDS
         projectIconsDiv.appendChild(projectEditIcon);
         projectIconsDiv.appendChild(projectTrashIcon);
@@ -728,6 +755,7 @@ const dom = (() => {
         projectIconAndTextDiv.appendChild(projectText);
         projectLink.appendChild(projectIconAndTextDiv);
         projectLink.appendChild(projectIconsDiv);
+        projectLink.appendChild(projectDeleteModal);
         projectsLinksDiv.appendChild(projectLink);
       }
     }
@@ -740,7 +768,6 @@ const dom = (() => {
     function selectProjectForTaskModal (projectID){
       let selectedProject = document.querySelector('.project-titles');
       selectedProject.value = projectID;
-      //selectedProject.setAttribute('selected');
     }
     function toggleTaskCompletion(projectID, taskID, selectedLinkIndex){
       let dataLinkIndex = selectedLinkIndex;
@@ -763,6 +790,7 @@ const dom = (() => {
         showAllTasks,
         changeTasksList,
         showAllProjects,
+        populateModalProjectTitles,
         selectProjectForTaskModal,
         toggleTaskCompletion
     }

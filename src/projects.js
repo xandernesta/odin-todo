@@ -9,18 +9,9 @@ const projects = (() => {
             this.id = id;
             this.taskArr = [];
         }
-/*         get title(){
-            return this._title;
-        } */
     }
     //Load some default projects from local storage for testing
     if(localStorage.getFromStorage('projects')=== null){
-        /*     addProject("Testing Project 1", 0)
-        addProject("2nd Testing Project", 1)
-        tasks.addTask('test task 1 proj 1','random assortment of details', '2/28/2023','low',0)
-        tasks.addTask('test task 2 proj 1','random assortment of details', '12/16/2022','low',0)
-        tasks.addTask('test task 3 proj 1','random assortment of details', '12/17/2022','high',0)
-        tasks.addTask('task4 testing proj 2','random assortment of details', '2/18/2023','high',1) */
         projectsList = 
         [
             {
@@ -51,24 +42,7 @@ const projects = (() => {
             
                     }
                 ]
-            }/*,
-            {
-                title: '2nd Testing Project',
-                taskArr: [
-                    {
-                        title: "task4 testing proj 2",
-                        details: "random assortment of details",
-                        dueDate: '2/18/2023',
-                        priority: 'high',
-                        completed: false,
-                        projectID: 1,
-                        taskID: 3,
-                        previousID: 2,
-            
-                    }
-                ],
-                id: 1
-            } */
+            }
         ];  
         localStorage.addToStorage(projectsList)
             
@@ -83,6 +57,20 @@ const projects = (() => {
         projectsList.push(project);
         localStorage.addToStorage(projectsList);
         //add a dom show projects or tasks
+    }
+    function removeProject(projectID){
+        let projectsFromStorage = projects.getAllProjects();
+        //get project from projectID
+        let projectToRemove = projectsFromStorage.find(proj => proj.id === projectID)
+        let indexToRemove = projectsFromStorage.indexOf(projectToRemove);
+        //remove it from that project
+        if(indexToRemove > -1){
+            projectsFromStorage.splice(indexToRemove,1);
+            localStorage.addToStorage(projectsFromStorage);
+        } else {
+            console.error('could not remove because indexToRemove = ', indexToRemove)
+        }
+        
     }
     function editProject(title,projectID){
         projectsList = getAllProjects();
@@ -110,8 +98,6 @@ const projects = (() => {
         projectsList = getAllProjects();
         projectsList[projectIndex].taskArr.push(taskObj)
         localStorage.addToStorage(projectsList);
-        console.log("prinnting new task array after adding the task to this project:")
-        console.table(projectsList[projectIndex].taskArr)
     }
     function retrieveProject(projectID){
         let projArr = getAllProjects();
@@ -136,6 +122,7 @@ const projects = (() => {
     return {
         projectsList,
         addProject,
+        removeProject,
         editProject,
         getAllProjects,
         addTaskToProject,
